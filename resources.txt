@@ -1,0 +1,16 @@
+[Resources]
+
+Here's a list of all resources used for this project.
+
+   :: We used several face icons for the emotions of the agents in the folder 
+      "CrowdSimulation/Assets/Faces". All of these icons are copyright Facebook inc. 
+      (www.facebook.com), and were taken without permission. 
+
+   :: We used the JGraphT graph library for this experiment's backend.
+      see http://jgrapht.org
+
+   :: We use the EJML matrices library for this experiment's backend as well. 
+      see http://ejml.org/wiki/index.php?title=Main_Page
+
+   :: We use OpenSimplexNoise to generate pseudo-random setups and terrains. 
+      see https://gist.github.com/KdotJPG/b1270127455a94ac5d19
