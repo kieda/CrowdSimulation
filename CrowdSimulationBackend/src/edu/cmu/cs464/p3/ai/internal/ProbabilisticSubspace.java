@@ -2,6 +2,7 @@ package edu.cmu.cs464.p3.ai.internal;
 
 import org.ejml.data.D1Matrix32F;
 import org.ejml.data.DenseMatrix32F;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  * represents a subspace in R^n where each point also has a 
@@ -15,17 +16,21 @@ import org.ejml.data.DenseMatrix32F;
  * @author zkieda
  */
 public class ProbabilisticSubspace {
-    private D1Matrix32F weights;
-    private D1Matrix32F uncertainties;
+    private SimpleMatrix weights;
+    private SimpleMatrix uncertainties;
     private int rank;
     
     public ProbabilisticSubspace(int rank){
         this.rank = rank;
-        this.weights = new DenseMatrix32F(rank, 1);
-        this.uncertainties = new DenseMatrix32F(rank, 1);
+        this.weights = new SimpleMatrix(rank, 1);
+        this.uncertainties = new SimpleMatrix(rank, 1);
     }
     
     public int getRank() {
         return rank;
+    }
+    
+    public double getUncertainty(ProbabilisticVector v){
+        
     }
 }

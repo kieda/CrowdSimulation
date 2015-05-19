@@ -61,9 +61,7 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
         final Group red = handle.apply("red");
         final Group blue = handle.apply("blue");
         
-        //counts for red team, blue team
-        int redTeamCount = (int) (gaussianInt(expectedTeamPlayerCount, 0.5));
-        int blueTeamCount = (int) (gaussianInt(expectedTeamPlayerCount, 0.5));
+        
         
         
     }

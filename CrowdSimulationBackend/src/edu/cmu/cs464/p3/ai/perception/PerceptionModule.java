@@ -11,4 +11,9 @@ public class PerceptionModule extends MultiModule{
     public void init(InternalModule internal){
         this.internal = internal;
     }
+
+    public InternalModule getInternal() {
+        return internal;
+    }
+    
 }

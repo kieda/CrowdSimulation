@@ -31,7 +31,7 @@ public class TokenModule extends SubModule {
         tokenCap[INTELLIGENCE] = getPlayer().getTraits().getIntelligenceTokens();
         tokenCap[PERCEPTION] = getPlayer().getTraits().getPerceptionTokens();
         
-        
+        //todo find correct token amounts
     }
     
     @Override

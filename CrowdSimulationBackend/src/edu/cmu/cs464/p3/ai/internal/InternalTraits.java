@@ -46,20 +46,4 @@ public class InternalTraits {
     public double getPerception() {
         return perception;
     }
-    
-    public int getCommunicationTokens(){
-        
-    }
-    public int getConfidenceTokens(){
-        
-    }
-    public int getPerceptionTokens(){
-        
-    }
-    public int getCourageTokens(){
-        
-    }
-    public int getIntelligenceTokens(){
-        
-    }
 }

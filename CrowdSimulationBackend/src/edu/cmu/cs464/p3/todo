@@ -1,0 +1,27 @@
+[Todo List]
+
+Internal Package : 
+    0) add EmotionLinearSystem to player, internal module
+    1) EmotionLinearSystem : 
+        find out a way of representing the delta and the current emotional 
+        system.
+        
+        Delta represented by the perception package.
+    2) MoodColorModule : 
+
+        complete translation - have way of getting current emotional state given
+        internal module
+    3) EmotionLinearSystem: 
+        find out initial multiprobabilisticsubspace for emotions
+        find out how to modify the multiprobabilisticsubspace after we step in the LP
+    4) TokenModule
+        find out how to translate the CCCIP to tokens.
+
+    5) add moodcolormodule, tokenmodule
+
+--- 
+later : memory module and estimate health module based on perception
+
+Core/Game : 
+    -- find out how we can determine everyone's field of view
+        (octree???)

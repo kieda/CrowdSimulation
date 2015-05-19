@@ -2,12 +2,13 @@ package edu.cmu.cs464.p3.ai.internal;
 
 //todo make this a module 
 
+import edu.cmu.cs464.p3.ai.core.SubModule;
 import java.util.Arrays;
 import javafx.scene.paint.Color;
 import org.ejml.data.DenseMatrix32F;
 
 // so we get the appropriate information
-public class MoodColorModule{
+public class MoodColorModule extends SubModule<InternalModule>{
     //represents our vector of colors
     // dimensions = {number of emptions, colors}
     // = 8x3 mat
@@ -39,6 +40,14 @@ public class MoodColorModule{
         //emotion over value 0.5 will increase in saturation, decrease in 
         //value
     }
+
+    @Override
+    public void onFrameUpdate() {
+        //change the color of this player
+//        getParent().getInternalState().
+    }
+    
+    
 
     public Color3f translate(Color3f current, ProbabilisticSubspace emotion){
       //check if the current color is a good match for the emotional space. 

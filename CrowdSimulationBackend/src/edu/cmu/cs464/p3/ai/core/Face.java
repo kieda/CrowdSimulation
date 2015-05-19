@@ -1,6 +1,6 @@
 package edu.cmu.cs464.p3.ai.core;
 
-import edu.cmu.cs464.p3.ai.internal.EmotionSubspace;
+import edu.cmu.cs464.p3.ai.internal.ProbabilisticSubspace;
 import java.util.Objects;
 
 /**
@@ -30,7 +30,7 @@ public abstract class Face {
     //
     
     public abstract String getName();
-    public abstract EmotionSubspace getProperties();
+    public abstract ProbabilisticSubspace getProperties();
     
     @Override
     public boolean equals(Object other){

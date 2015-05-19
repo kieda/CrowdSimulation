@@ -22,4 +22,7 @@ public class Flag implements GameObject{
     public ReadOnlyObjectProperty<Vector2d> getPositionProperty() {
         return position.getReadOnlyProperty();
     }
+
+    @Override
+    public void onFrameUpdate() {}
 }

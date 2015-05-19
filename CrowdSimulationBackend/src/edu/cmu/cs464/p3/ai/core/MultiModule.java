@@ -1,8 +1,11 @@
 package edu.cmu.cs464.p3.ai.core;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author zkieda
@@ -20,9 +23,16 @@ public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> 
         modules.stream().forEachOrdered(Module::onFrameUpdate);
     }
     
-    public <T extends Module> Iterator<T> getModulesByClass(Class<T> clazz){
+    public <T extends Module> Stream<T> getModulesByClass(Class<T> clazz){
         return modules.stream().filter(clazz::isInstance).map(
-                module -> (T)module
-        ).iterator();
+                module -> (T)module);
+    }
+    
+    //note : this will return T iff there is 
+    public <T extends Module> Optional<T> getModuleByClass(Class<T> clazz){
+        List<T> l = Lists.newArrayList(getModulesByClass(clazz).iterator());
+        if(l.isEmpty()) return Optional.empty();
+        if(l.size() == 1) return Optional.of(l.get(0));
+        throw new Error("Expected exactly one module that falls under the class " + clazz);
     }
 }
