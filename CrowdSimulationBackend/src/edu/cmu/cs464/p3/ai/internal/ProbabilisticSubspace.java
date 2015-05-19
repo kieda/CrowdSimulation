@@ -33,4 +33,12 @@ public class ProbabilisticSubspace {
     public double getUncertainty(ProbabilisticVector v){
         
     }
+
+    public SimpleMatrix getWeights() {
+        return weights;
+    }
+
+    public SimpleMatrix getUncertainties() {
+        return uncertainties;
+    }
 }

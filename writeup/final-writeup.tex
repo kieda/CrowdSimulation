@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 \setlength\parindent{0pt}
 \begin{document}
 \title{15-464 Final Project\\
@@ -72,7 +73,8 @@ We define the characteristic emotional graph $(V, E)$. This graph, along with th
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline 
-Vertex No. & Emotion & Adjacent Edges \\ 
+%Edge No. & Emotion & Adjacent Edges \\ 
+Vertex No. & Emotion & Adjacent Vertices \\ 
 \hline
 0 & Happiness & 1, 7, 4, 6\\ 
 \hline
@@ -82,17 +84,63 @@ Vertex No. & Emotion & Adjacent Edges \\
 \hline
 3 & Surprise & 2, 7\\
 \hline
-4 & Sadness & 0, 1\\ 
+4 & Sadness & 0, 1, 7\\ 
 \hline
-5 & Disgust & 1, 2\\ 
+5 & Disgust & 1, 2, 6\\ 
 \hline
-6 & Anger & 0, 1, 2\\
+6 & Anger & 0, 1, 2, 5\\
 \hline
-7 & Anticipation & 0, 3\\ 
+7 & Anticipation & 0, 3, 4\\ 
 \hline
 \end{tabular}
 \end{center}
 
+%This translates into a graph with vertices and edges
+%\begin{center}
+%\begin{tabular}{|c|c|c|}
+%\hline 
+%Vertex  & Adjacent Vertices & Adjacent Edges \\ 
+%\hline
+%a & b, c, d & 0, 1, 6\\ 
+%\hline
+%b & a, c, d, f & 1, 2, 4, 5\\ 
+%\hline
+%c & a, b & 5, 6\\ 
+%\hline
+%d & a, b, e & 0, 4, 7\\ 
+%\hline
+%e &  d, f & 3, 7\\ 
+%\hline
+%f &  b, e & 2, 3\\ 
+%\hline
+%\end{tabular}
+%\end{center}
+
+We can define the internal emotional space of an agent as a linear program. We constrain the program such that all incoming emotional values must sum to a value less than or equal to some $c_j$. We define the constants $c$, $\lambda$, and $\alpha$. We store emotions in a variable vector $v$. $\lambda$ changes the effectiveness of the variable $v$, $c$ affects the total allowed emotions at a vertex, and $\alpha$ is an offset. When $\lambda$ is positive, $v$ has a negative correlation with respect to other variables. When $\lambda$ is negative, $v$ has a positive correlation. For row $j$, 
+\[\sum_{i, (i, j) \in E} \left(\alpha_i + \lambda_i v_i\right) \le c_j\]
+With additional constraints
+\[\sum_{i, (i, j) \in E} \left(\alpha_i + \lambda_i v_i\right) \ge 0\]
+
+This translates into the LP
+\[M_{\lambda}\vec{v} \le \vec{c} - M_{\alpha} \vec{1}\]
+\[M_{\lambda}\vec{v}  \ge - M_{\alpha} \vec{1}\]
+Where $M_\lambda$, $M_\alpha$ are both matrices, and $\vec{1}$ is a vector of $1$s. We define the matrices 
+\[M_{\lambda}(j, i) = 
+\begin{cases}
+\lambda_{j, i} & \textnormal{if }(j, i) \in E\\
+0 & \textnormal{otherwise}
+\end{cases}\]
+and
+\[M_{\alpha}(j, i) = 
+\begin{cases}
+\alpha_{j, i} & \mbox{if }(j, i) \in E\\
+0 & \mbox{otherwise}
+\end{cases}\]
+Note that 
+\[(M_{\lambda} \cdot v)(j) = \sum_i\left(M_{\lambda}(j, i)v_i\right)\]
+and 
+\[(\vec{c} - M_{\alpha}\cdot\vec{1})(j) = c_j - \sum_i \left(M_{\alpha}(j, i)\cdot 1\right)\]
+We use this linear program to bound the feasible emotional state of an agent. We can determine the feasibility of an agent's emotional state using Seidel's algorithm. When we go to a different emotional state, however, we do not find an optimum solution. When our emotions change as a result of our perceptions, this creates a vector $\delta$ that will change the current state. We step our current solution by $\delta$ to find our new emotional state. When this occurs, we check if the segment intersects with the convex region. If the segment does intersect, our new emotional state is on the nearest plane of the convex hull we intersected with. To detect and find this intersection, we use the Liang-Barsky algorithm for clipping.\\
 % We define the translation correlation from the CCCIP model to $S$.\\
 % translation here
 

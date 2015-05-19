@@ -53,7 +53,7 @@ public class Player extends MultiModule implements GameObject{
         this.playerActions = new PlayerActions(this.playerState);
         
         action.init(internal, perception, playerActions);
-        internal.init(perception);
+        internal.init(perception, playerActions::setMoodColor);
         perception.init(internal);
     }
 

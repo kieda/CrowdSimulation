@@ -2,6 +2,7 @@ package edu.cmu.cs464.p3.ai.internal;
 
 import edu.cmu.cs464.p3.ai.core.SubModule;
 import edu.cmu.cs464.p3.ai.perception.InterestModule;
+import edu.cmu.cs464.p3.ai.perception.PerceptionEmotionChange;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 import edu.cmu.cs464.p3.util.LinearProgram;
 import edu.cmu.cs464.p3.util.MatrixUtil;
@@ -9,6 +10,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.SimpleGraph;
 import org.ejml.simple.SimpleMatrix;
 import static edu.cmu.cs464.p3.util.MatrixUtil.fill;
+import static edu.cmu.cs464.p3.ai.internal.InternalModule.NUM_MOODS;
 import edu.cmu.cs464.p3.util.Tuple;
 import java.util.Iterator;
 import java.util.Optional;
@@ -107,7 +109,7 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
         addEdges(3, 7);
         addEdges(5, 6);
     }
-    private static final int NUM_MOODS = 8;
+    
     private int numVerts(){
         return moodGraph.vertexSet().size();
     }
@@ -159,9 +161,17 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
     }
     
     private SimpleMatrix getDelta(){ 
-        
+        return getParent().getPerception().getDelta().getMatrix();
     }
-    private SimpleMatrix getEmotion(){return null;}
+    
+    private SimpleMatrix getEmotion(){
+        return moodSpace.getWeights();
+    }
+
+    public ProbabilisticSubspace getMoodSpace() {
+        return moodSpace;
+    }
+    
     @Override
     public void onFrameUpdate() {
         final SimpleMatrix delta = getDelta();

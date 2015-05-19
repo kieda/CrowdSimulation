@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.ejml.simple.SimpleMatrix;
 import edu.cmu.cs464.p3.util.Tuple.*;
+import org.ejml.data.DenseMatrix32F;
 import org.ejml.data.MatrixIterator64F;
 import org.ejml.ops.MatrixDimensionException;
 /**
@@ -103,5 +104,9 @@ public class MatrixUtil {
     
     public static int getCol(SimpleMatrix mat, int idx){
         return idx % mat.numCols();
+    }
+    
+    public static DenseMatrix32F mult32(DenseMatrix32F mat, SimpleMatrix other){
+        
     }
 }

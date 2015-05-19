@@ -20,10 +20,12 @@ public class Game implements Runnable {
     private ArrayList<Group> groups;
     private SerializeGame gameSerialization;
     private List<Runnable> newFrameListeners;
+    private List<GameUpdatable> gameUpdates;
     private List<Consumer<Player.PlayerState>> newPlayerListeners;
     
     private Game(OutputStream out) {
         groups = new ArrayList<>();
+        gameUpdates = new ArrayList<>();
         newFrameListeners = new ArrayList<>();
         newPlayerListeners = new ArrayList<>();
         
@@ -51,13 +53,20 @@ public class Game implements Runnable {
         //note : objective status has ended if all players in group are dead
         return groups.stream().allMatch(g -> g.getObjectiveStatus().hasEnded());
     }
-    
+    void addGameUpdatable(GameUpdatable gu){
+        gameUpdates.add(gu);
+    }
+    void removeGameUpdatable(GameUpdatable gu){
+        gameUpdates.remove(gu);
+    }
     @Override
     public void run(){
         while(!isEndGame()) step();
     }
     //called until checkEndGame() returns false.
     private void step(){
+        //update all game objects
+        gameUpdates.forEach(GameUpdatable::onFrameUpdate);
         
         //at the end, run everything waiting for a frame update
         newFrameListeners.forEach(r -> r.run());
@@ -67,6 +76,7 @@ public class Game implements Runnable {
     }
     
     void registerNewPlayer(Player p){
+        gameUpdates.add(p);
         newPlayerListeners.forEach(pl -> pl.accept(p.getPlayerState()));
     }
 }

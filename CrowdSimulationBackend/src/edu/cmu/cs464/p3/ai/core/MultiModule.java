@@ -28,7 +28,14 @@ public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> 
                 module -> (T)module);
     }
     
-    //note : this will return T iff there is 
+    /**
+     * particularly useful for a parent module to aggregate a bunch of data
+     * from the child modules.
+     * 
+     * @param <T>
+     * @param clazz
+     * @return 
+     */
     public <T extends Module> Optional<T> getModuleByClass(Class<T> clazz){
         List<T> l = Lists.newArrayList(getModulesByClass(clazz).iterator());
         if(l.isEmpty()) return Optional.empty();
