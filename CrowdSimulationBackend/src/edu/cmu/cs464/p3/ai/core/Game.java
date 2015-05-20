@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * represents the game that will be played.
@@ -33,14 +35,24 @@ public class Game implements Runnable {
     }
     public static Game makeGame(OutputStream out, InitialStateGenerator genFn) {
         Game g = new Game(out);
-        genFn.initialize(g::addGroup);
+        genFn.initialize(g::genGroupFn);
         return g;
     }
-    private Group addGroup(String groupName){
-        Group g = new Group(this, groupName);
-        groups.add(g);
-        return g;
+    
+    public Function<String, Group> genGroupFn(final Function<Group, Objective> objectiveFn){
+        return (str) -> {
+            Group g = new Group(Game.this, str) {
+                private final Objective obj = objectiveFn.apply (this);
+                @Override
+                public Objective getObjective() {
+                    return obj;
+                }
+            };
+            groups.add(g);
+            return g;
+        };
     }
+    
     private void onNewFrameListener(Runnable r){
         newFrameListeners.add(r);
     }
@@ -51,7 +63,7 @@ public class Game implements Runnable {
     private boolean isEndGame(){        
         //check if all groups objectives are decidedly fulfilled or unfulfilled
         //note : objective status has ended if all players in group are dead
-        return groups.stream().allMatch(g -> g.getObjectiveStatus().hasEnded());
+        return groups.stream().allMatch(g -> g.getObjective().getObjectiveStatus().hasEnded());
     }
     void addGameUpdatable(GameUpdatable gu){
         gameUpdates.add(gu);

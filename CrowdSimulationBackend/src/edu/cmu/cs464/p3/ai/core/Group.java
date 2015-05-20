@@ -8,9 +8,12 @@ import java.util.List;
 /**
  * organizes a series of players into a single group. Controls the creation of 
  * players, and gives players in the same group information about the body
+ * 
+ * In our system, a group is just an obj
+ * 
  * @author zkieda
  */
-public class Group{
+public abstract class Group{
     private final Game game; 
     private final String groupName;
     private final List<Player> players;
@@ -35,13 +38,18 @@ public class Group{
         players.add(p);
         return p;
     }
+    
     public int size(){
         return players.size();
     }
+    
     public void removePlayer(Player p){
         players.remove(p);
     }
-    public ObjectiveStatus getObjectiveStatus(){
-        return null;
-    }
+    
+    /**
+     * overridden by subclasses to determine the behavior of the group in the
+     * context of the game
+     */
+    public abstract Objective getObjective();
 }

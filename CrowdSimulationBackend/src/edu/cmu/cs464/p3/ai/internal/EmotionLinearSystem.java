@@ -18,24 +18,23 @@ import java.util.Optional;
  * @author zkieda
  */
 public class EmotionLinearSystem extends SubModule<InternalModule> {
-    //change : 
-    // vertex = (uncertainty, weights)
-    // edge = (pt, pt)
-    // pt =     
-    //   INVERSE(int)      // inverse correlation, 
-    // | POSITIVE()        // positive correlation
     
-    // todo - just have linear program were we take the sum
-    // 1.) find out correct LP
-    // 2.) find graph types that can make the LP
+    /* TODO
+     * main idea : 
+     * 
+     * The final emotional value is the summation of all including vertices, 
+     * including a self-loop. We weight the self-loop more than most, and 
+     * the rest have the corresponding correlation factors to this vertex.
+     * 
+     * Emotion_j = (sum_{(j, i) in E} influence(i, j) * weight_i) + influence(j, j) * weight_j 
+     */
+    
+    /* FINAL TODO:  
+     * find a way to dampen the uncertainty in emotions. 
+     */
     
     static class MoodVertex {
         private final int id;
-        
-        //dynamic values of the vertex
-        private double uncertainty;
-        private double weight;
-        
         
         //fixed. Determines summation value at the vertex
         private final double c;
@@ -47,8 +46,6 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
     }
     
     static class MoodEdge {
-        
-        
         //multiplied by our linear constraint.
         // + alpha is a negative correlation
         // - alpha is a positive correlation
@@ -72,11 +69,6 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
     //represents our linear program
     private LinearProgram emotionProgram;
     
-    // 1. have the graph
-    // 2. build the matrix representation from the graph
-    
-    // public void augment( ... )
-    //  - satisfy linear constraint
     private void addEdges(int fromVertex, int... toVerts){
         for(int i : toVerts) 
             moodGraph.addEdge(vertices[fromVertex], vertices[i]);

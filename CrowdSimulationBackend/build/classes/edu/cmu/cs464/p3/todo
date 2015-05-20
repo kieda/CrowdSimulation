@@ -9,7 +9,7 @@ Internal Package :
         (some linalg)
     3.5) find out threshold change for moodcolor, rest of multiprobabilityspace
         utility methods
-    4) TokenModule (max)
+    4) TokenModule (Max)
         find out how to translate the CCCIP to tokens.
         
         (some linalg)
@@ -17,7 +17,16 @@ Internal Package :
         find out interaction
         find out a method to take the intersection of two
     6) find out PerceptionEmotionChange subclasses
-    
+
+TODO IMPORTANT : stabilize the internal game mechanics
+make sure everything is working with respect to the game itself 
+construct our objective and framework for making objectives.
+
+Then (and only then) we can start testing the game and adding in components.
+
+
+TODO 2 : add flag item into the game. Keep track of flag position.
+
 --- 
 later : memory module and estimate health module based on perception
 

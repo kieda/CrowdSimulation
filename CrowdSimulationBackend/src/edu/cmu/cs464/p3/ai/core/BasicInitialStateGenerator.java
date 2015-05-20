@@ -5,6 +5,7 @@ import edu.cmu.cs464.p3.util.OpenSimplexNoise;
 import edu.cmu.cs464.p3.util.PointToRealFn;
 import java.awt.Dimension;
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -57,9 +58,10 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
     }
     
     @Override
-    public void initialize(Function<String, Group> handle) {
-        final Group red = handle.apply("red");
-        final Group blue = handle.apply("blue");
+    public void initialize(Function<Function<Group, Objective>, Function<String, Group>> handle) {
+        final Function<String, Group> ctfFactory = handle.apply(CaptureTheFlag::new);
+        final Group red = ctfFactory.apply("red");
+        final Group blue = ctfFactory.apply("blue");
         
         
         
