@@ -1,9 +1,0 @@
-1=position:3,0;direction:0,0;attacking:false;mood:.5,.5,.3;face:sad;team:red;
-2=position:0,3;direction:0,0;attacking:true;team:blue;face:ashamed;
-(endframe)
-2=position:0,2;
-(endframe)
-2=position:0,1;
-(endframe)
-2=position:0,0;
-(endframe)

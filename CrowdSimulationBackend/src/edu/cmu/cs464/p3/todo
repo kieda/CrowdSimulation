@@ -1,18 +1,15 @@
 [Todo List]
 
 Internal Package : 
-    2) MoodColorModule : 
-
-        complete translation - have way of getting current emotional state given
-        internal module
-
-        (some linalg)
+    
     3) EmotionLinearSystem: 
         find out initial multiprobabilisticsubspace for emotions
         find out how to modify the multiprobabilisticsubspace after we step in the LP
         
         (some linalg)
-    4) TokenModule
+    3.5) find out threshold change for moodcolor, rest of multiprobabilityspace
+        utility methods
+    4) TokenModule (max)
         find out how to translate the CCCIP to tokens.
         
         (some linalg)
@@ -20,6 +17,7 @@ Internal Package :
         find out interaction
         find out a method to take the intersection of two
     6) find out PerceptionEmotionChange subclasses
+    
 --- 
 later : memory module and estimate health module based on perception
 

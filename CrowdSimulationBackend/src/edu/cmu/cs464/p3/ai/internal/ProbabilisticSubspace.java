@@ -1,5 +1,9 @@
 package edu.cmu.cs464.p3.ai.internal;
 
+import edu.cmu.cs464.p3.util.MatrixUtil;
+import java.util.Random;
+import org.apache.commons.math3.analysis.function.Gaussian;
+import org.apache.commons.math3.random.GaussianRandomGenerator;
 import org.ejml.data.D1Matrix32F;
 import org.ejml.data.DenseMatrix32F;
 import org.ejml.simple.SimpleMatrix;
@@ -20,18 +24,49 @@ public class ProbabilisticSubspace {
     private SimpleMatrix uncertainties;
     private int rank;
     
+    public ProbabilisticSubspace(int rank, SimpleMatrix weights, SimpleMatrix uncertainties){
+        MatrixUtil.checkDims(weights, rank, 1);
+        MatrixUtil.checkDims(uncertainties, rank, 1);
+        this.rank = rank;
+        this.weights = weights;
+        this.uncertainties = uncertainties;
+    }
+    
     public ProbabilisticSubspace(int rank){
         this.rank = rank;
         this.weights = new SimpleMatrix(rank, 1);
         this.uncertainties = new SimpleMatrix(rank, 1);
     }
     
-    public int getRank() {
-        return rank;
+    public ProbabilisticSubspace transform(SimpleMatrix M){
+        //must have "rank" cols
+        //new rank will be M.numRows
+        MatrixUtil.checkNumCol(M, rank);
+        return new ProbabilisticSubspace(M.numRows(), M.mult(weights), M.mult(uncertainties));
     }
     
-    public double getUncertainty(ProbabilisticVector v){
+    public SimpleMatrix probabilityDiff(SimpleMatrix vec){
+        MatrixUtil.checkDims(vec, rank, 1);
+        final SimpleMatrix diff = vec.minus(weights);
         
+        return MatrixUtil.fill(new SimpleMatrix(rank, 1),    
+            (row, col) -> 
+                new Gaussian(0, uncertainties.get(row, col)).value(diff.get(row, col)));
+        
+    }
+    
+    public ProbabilisticSubspace merge(ProbabilisticSubspace other){}
+    
+    public ProbabilisticSubspace probabilityDiff(ProbabilisticSubspace other){}
+    
+    /**
+     * gives the length of this space, also accounting for uncertainties
+     * @return 
+     */
+    public double length(){}
+    
+    public int getRank() {
+        return rank;
     }
 
     public SimpleMatrix getWeights() {
@@ -40,5 +75,13 @@ public class ProbabilisticSubspace {
 
     public SimpleMatrix getUncertainties() {
         return uncertainties;
+    }
+    private Random rand = new Random();
+    /**
+     * @return a random point in our space, with probabilities expected from 
+     * our probability space
+     */
+    public SimpleMatrix getRandomValue(){
+        return 
     }
 }

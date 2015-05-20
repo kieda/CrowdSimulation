@@ -16,12 +16,13 @@ import org.ejml.ops.MatrixDimensionException;
  * @author zkieda
  */
 public class MatrixUtil {
-    public static void fill(SimpleMatrix mat, BiFunction<Integer, Integer, Double> posToValue){
+    public static SimpleMatrix fill(SimpleMatrix mat, BiFunction<Integer, Integer, Double> posToValue){
         for(int j = 0; j < mat.numRows(); j++){
             for(int i = 0; i < mat.numCols(); i++){
                 mat.set(j, i, posToValue.apply(j, i));
             }
         }
+        return mat;
     }
     
     public static boolean compare(SimpleMatrix m1, SimpleMatrix m2, BiPredicate<Double, Double> cmpFn){
@@ -105,8 +106,19 @@ public class MatrixUtil {
     public static int getCol(SimpleMatrix mat, int idx){
         return idx % mat.numCols();
     }
-    
-    public static DenseMatrix32F mult32(DenseMatrix32F mat, SimpleMatrix other){
-        
+    public static void checkDims(SimpleMatrix mat, int numRows, int numCols){
+        if(!(mat.numCols() == numCols && mat.numRows() == numRows)) 
+            throw new MatrixDimensionException("Matrix " + mat + " does not have dimensions "
+              + numRows + "x" + numCols + ", as expected.");
+    }
+    public static void checkNumRow(SimpleMatrix mat, int numRows){
+        if(!(mat.numRows() == numRows)) 
+            throw new MatrixDimensionException("Matrix " + mat + " does not have "
+              + numRows + " rows" + ", as expected.");
+    }
+    public static void checkNumCol(SimpleMatrix mat, int numCols){
+        if(!(mat.numRows() == numCols)) 
+            throw new MatrixDimensionException("Matrix " + mat + " does not have "
+              + numCols + " cols" + ", as expected.");
     }
 }

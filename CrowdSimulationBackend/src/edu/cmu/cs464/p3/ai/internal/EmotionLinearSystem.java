@@ -1,21 +1,15 @@
 package edu.cmu.cs464.p3.ai.internal;
 
+import static edu.cmu.cs464.p3.util.MatrixUtil.fill;
+import static edu.cmu.cs464.p3.ai.internal.InternalModule.NUM_MOODS;
 import edu.cmu.cs464.p3.ai.core.SubModule;
-import edu.cmu.cs464.p3.ai.perception.InterestModule;
-import edu.cmu.cs464.p3.ai.perception.PerceptionEmotionChange;
-import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 import edu.cmu.cs464.p3.util.LinearProgram;
 import edu.cmu.cs464.p3.util.MatrixUtil;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.SimpleGraph;
 import org.ejml.simple.SimpleMatrix;
-import static edu.cmu.cs464.p3.util.MatrixUtil.fill;
-import static edu.cmu.cs464.p3.ai.internal.InternalModule.NUM_MOODS;
 import edu.cmu.cs464.p3.util.Tuple;
-import java.util.Iterator;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.stream.Stream;
 /**
  * this is the linear system built from the graph [see section 5].
  * Every agent has this linear system. We update this system every timestep, 
@@ -27,7 +21,7 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
     //change : 
     // vertex = (uncertainty, weights)
     // edge = (pt, pt)
-    // pt = 
+    // pt =     
     //   INVERSE(int)      // inverse correlation, 
     // | POSITIVE()        // positive correlation
     
