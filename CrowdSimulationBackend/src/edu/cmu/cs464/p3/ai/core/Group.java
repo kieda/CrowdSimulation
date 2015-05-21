@@ -2,6 +2,7 @@ package edu.cmu.cs464.p3.ai.core;
 
 
 
+import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * 
  * @author zkieda
  */
-public abstract class Group{
+public abstract class Group implements Entity{
     private final Game game; 
     private final String groupName;
     private final List<Player> players;

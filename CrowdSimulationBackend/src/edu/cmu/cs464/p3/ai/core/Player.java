@@ -1,5 +1,6 @@
 package edu.cmu.cs464.p3.ai.core;
 
+import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs464.p3.ai.action.ActionModule;
 import edu.cmu.cs464.p3.ai.internal.InternalModule;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
@@ -12,7 +13,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector2d;
 
-public class Player extends MultiModule implements GameObject{
+public class Player extends MultiModule implements GameObject, Entity{
     private int hitPoints;
     private int attackPoints;
     private final int agentID;
