@@ -19,6 +19,10 @@ public class StateTransitionBuilder {
         addedStates = new HashSet<>();
     }
     
+    public Set<State> getStates(){
+        return addedStates;
+    }
+    
     private void addState(State s) throws FiniteStateException{
         if(!addedStates.contains(s)){
             addedStates.add(s);

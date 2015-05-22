@@ -48,6 +48,62 @@ This internal state is the interface between perception and action. Perception a
 
 When we want to add a feature to our AI, it will fall into one of three categories: internal, perception, and action. An addition to the internal model allows agents to build a more advanced emotional heuristic. Additions to the perception model allow agents to gain a more complex notion of their current and possible future environments. An addition to the action model gives agents a more complex system of interactions possible to reach their goal.\\  
 \end{subsection}
+\begin{subsection}{Game Representation}
+For this game in particular, we have an objective representation per group, and a representation per individual. The group objective is a Finite State Machine that omnisciently determines the state of the game. Each individual also has a FSM, but this FSM is informed by its perception. \\
+
+\textbf{A Few Notes on FSM Notation:}\\
+We represent $(A | B)$ as a state machine that can either be $A$ or $B$, and can move bidirectionally to each state. The superstate $A \times B$ represents the cross product of the possible state transformations. For example, suppose that $A, B, C, D$ are simple states. The FSM $(A | B) \times (C | D)$ has states $A : C$, $A:D$, $B:C$, $B:D$. The following transitions are bidirectionally linked in this FSM, $(A:C, B:C), (A:D, B:D)$, $(A:C, A:D)$, $(B:C, B:D)$.\\
+
+This allows us to construct a FSM with multiple boolean properties, and traverse between them.\\
+
+\textbf{The Group FSM:}\\
+We represent a group's FSM while playing Capture the Flag as
+\begin{align*}
+A &= \texttt{Our Flag not Taken}\\
+A' &= \texttt{Our Flag Taken}\\
+B &= \texttt{Enemy Flag not Taken}\\
+B' &= \texttt{Enemy Flag Taken}\\
+C &= \texttt{No Flag Captured}\\
+D &= \texttt{Our Flag Captured}\\
+D' &= \texttt{Enemy Flag Captured}
+\end{align*}
+\begin{align*}
+C \times ((A | A') \times (B | B')) &\in FSM\\
+(C:A':(B|B'), D) &\in FSM\\
+(C:(A|A'):B', D') &\in FSM
+\end{align*}
+Note that this FSM is \emph{omniscient}, implying that the state will change to the correct state, no matter what the individual agents know. The agent FSM, on the other hand, changes according to the agent's current knowledge. \\
+
+\textbf{The Agent FSM:}\\
+The only transitions that are omniscient in this interaction are when a flag is captured. The agent immediately 
+jumps to the \texttt{Done}, regardless if the agent has knowledge if a flag is captured or not. 
+\begin{align*}
+A &= \texttt{Holding Flag}\\
+A' &= \texttt{Not Holding Flag}\\
+B &= \texttt{Being Attacked}\\
+B' &= \texttt{Not Being Attacked}\\
+C &= \texttt{Attacking}\\
+C' &= \texttt{Not Attacking}\\
+D &= \texttt{Our Flag Taken}\\
+D' &= \texttt{Our Flag Not Taken}\\
+E &= \texttt{Enemy Flag Taken}\\
+E' &= \texttt{Enemy Flag Not Taken}\\
+F &= \texttt{Done}\\
+\\
+G &= (B|B')\times(D|D')
+\end{align*}
+\[\begin{array}{c}
+((A\times G)\;|\;(A'\times(E|E')\times (C|C')\times G))\in FSM\\
+((A\times G), F) \in FSM\\
+\\
+\{(state, F) | state \in (A': (E|E'):(C|C'):(B|B'):(D|D')), \\
+state\notin A': E':(C|C'):B':D')\} \\
+\subseteq FSM
+\end{array}\]
+Notice that from all states, except from the one where we aren't being attacked and no flags are taken, the agent can complete. An agent can reach the $\texttt{Done}$ state iff it has either been killed, or a flag has been captured.\\
+
+Using the current state in the FSM, we modify the agent's internal state appropriately based on the properties of the new state. For example, \texttt{Attacking} and \texttt{Not Attacking} are properties an agent could have. Once we enter or exit this property, we modify the agent's state appropriately. This allows us to manage the emotions with respect to each property, rather than all possible states.
+\end{subsection}
 \end{section}
 \begin{section}{The CCCIP Model}
 The CCCIP model has five different indicators -- communication, confidence, courage, intelligence, and perception. These four indicators determine the underlying behavior of an individual and how they interact in the game, and range from real values from $1.0$ to $-1.0$. These four indicators change an individual as follows:

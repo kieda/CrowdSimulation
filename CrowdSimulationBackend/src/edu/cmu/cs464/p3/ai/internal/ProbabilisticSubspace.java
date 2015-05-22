@@ -4,6 +4,7 @@ import edu.cmu.cs464.p3.util.MatrixUtil;
 import java.util.Random;
 import org.apache.commons.math3.analysis.function.Gaussian;
 import org.apache.commons.math3.random.GaussianRandomGenerator;
+import org.apache.commons.math3.random.Well1024a;
 import org.ejml.data.D1Matrix32F;
 import org.ejml.data.DenseMatrix32F;
 import org.ejml.simple.SimpleMatrix;
@@ -76,12 +77,14 @@ public class ProbabilisticSubspace {
     public SimpleMatrix getUncertainties() {
         return uncertainties;
     }
+    
     private Random rand = new Random();
     /**
      * @return a random point in our space, with probabilities expected from 
      * our probability space
      */
     public SimpleMatrix getRandomValue(){
-        return 
+        return weights.plus(MatrixUtil.tabulate(rank, 1, 
+                (j, i) -> uncertainties.get(j, i) * rand.nextDouble()));
     }
 }

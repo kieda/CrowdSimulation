@@ -5,6 +5,8 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javax.vecmath.Vector2d;
 
 /**
+ * pick up command?
+ * drop command?
  * @author zkieda
  */
 public class Flag implements GameObject{

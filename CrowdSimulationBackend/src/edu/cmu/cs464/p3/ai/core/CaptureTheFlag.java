@@ -1,19 +1,17 @@
 package edu.cmu.cs464.p3.ai.core;
 
 
+
 import com.continuent.tungsten.fsm.core.FiniteStateException;
 import com.continuent.tungsten.fsm.core.State;
 import com.continuent.tungsten.fsm.core.StateMachine;
 import com.continuent.tungsten.fsm.core.StateTransitionMap;
 import com.continuent.tungsten.fsm.core.StateType;
 import edu.cmu.cs464.p3.ai.core.Objective.ObjectiveStatus;
-import edu.cmu.cs464.p3.util.AggregateTransition;
 import edu.cmu.cs464.p3.util.StateTransitionBuilder;
-import java.util.Objects;
 import java.util.function.Function;
 
 //represents the capture the flag game
-
 
 // make "objective" DFA --
 //  each transition will have an associated payoff value
@@ -44,7 +42,7 @@ import java.util.function.Function;
 
 // have high level idea of everything
 // need to implement specifics
-public class CaptureTheFlag implements Objective{
+public class CaptureTheFlag implements Objective {
     private final Group group;
     
     private final StateTransitionMap groupStateMap;
@@ -116,8 +114,8 @@ public class CaptureTheFlag implements Objective{
         };
     }
     
-    private static final Function<State, Function<String, State>> findChildOf = 
-            state -> str -> state.getChildren().stream().filter(c -> 
+    private static final Function<StateTransitionBuilder, Function<String, State>> findChildOf = 
+            builder -> str -> builder.getStates().stream().filter(c -> 
             c.getName().endsWith(str)).findAny().get();
     
     public CaptureTheFlag(Group group) {
@@ -138,10 +136,11 @@ public class CaptureTheFlag implements Objective{
                 State enemyFlagCaptured = new State(STATE_ENEMY_FLAG_CAPTURED, StateType.END, parent);
                 State ourFlagCaptured = new State(STATE_OUR_FLAG_CAPTURED, StateType.END, parent);
                 
-                Function<String, State> findChild = findChildOf.apply(notCaptured);
+                Function<String, State> findChild = findChildOf.apply(builder);
                 State enemyFlagTaken = findChild.apply(STATE_ENEMY_FLAG_TAKEN + ":" + STATE_OUR_FLAG_NOT_TAKEN);
                 State ourFlagTaken = findChild.apply(STATE_ENEMY_FLAG_NOT_TAKEN + ":" + STATE_OUR_FLAG_TAKEN);
                 State bothFlagsTaken = findChild.apply(STATE_ENEMY_FLAG_TAKEN + ":" + STATE_OUR_FLAG_TAKEN);
+
                 
                 return new State[][]{
                     {enemyFlagTaken, enemyFlagCaptured},
@@ -235,8 +234,8 @@ public class CaptureTheFlag implements Objective{
     @Override
     public ObjectiveStatus getObjectiveStatus() {
         if(group.size() == 0) return ObjectiveStatus.FAIL;
-        if(groupMachine.getState().equals(STATE_OUR_FLAG_CAPTURED)) return ObjectiveStatus.FAIL;
-        if(groupMachine.getState().equals(STATE_ENEMY_FLAG_CAPTURED)) return ObjectiveStatus.SUCCESS;
+        if(groupMachine.getState().getName().equals(STATE_OUR_FLAG_CAPTURED)) return ObjectiveStatus.FAIL;
+        if(groupMachine.getState().getName().equals(STATE_ENEMY_FLAG_CAPTURED)) return ObjectiveStatus.SUCCESS;
         return ObjectiveStatus.RUNNING;
     }
 }

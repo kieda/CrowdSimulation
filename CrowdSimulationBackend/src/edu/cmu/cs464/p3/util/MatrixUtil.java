@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.ejml.simple.SimpleMatrix;
 import edu.cmu.cs464.p3.util.Tuple.*;
+import java.util.function.Supplier;
 import org.ejml.data.DenseMatrix32F;
 import org.ejml.data.MatrixIterator64F;
 import org.ejml.ops.MatrixDimensionException;
@@ -16,6 +17,14 @@ import org.ejml.ops.MatrixDimensionException;
  * @author zkieda
  */
 public class MatrixUtil {
+    
+    public static SimpleMatrix tabulate(int numRows, int numCols, Supplier<Double> posToValue){
+        return fill(new SimpleMatrix(numRows, numCols), (j, i) -> posToValue.get());
+    }
+    
+    public static SimpleMatrix tabulate(int numRows, int numCols, BiFunction<Integer, Integer, Double> posToValue){
+        return fill(new SimpleMatrix(numRows, numCols), posToValue);
+    }
     public static SimpleMatrix fill(SimpleMatrix mat, BiFunction<Integer, Integer, Double> posToValue){
         for(int j = 0; j < mat.numRows(); j++){
             for(int i = 0; i < mat.numCols(); i++){

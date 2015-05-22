@@ -63,6 +63,8 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
         final Group red = ctfFactory.apply("red");
         final Group blue = ctfFactory.apply("blue");
         
+        //todo - 1. add in players
+        // 2. add in flags
         
         
         
