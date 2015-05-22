@@ -14,3 +14,11 @@ Here's a list of all resources used for this project.
 
    :: We use OpenSimplexNoise to generate pseudo-random setups and terrains. 
       see https://gist.github.com/KdotJPG/b1270127455a94ac5d19
+  
+   :: The Guava library for various utilities
+ 
+   :: Commons CLI for processing the command line args
+
+   :: Commons Math for various math functionality
+
+   :: Tungsten-FSM for a finite state machine library to define game and player logic
