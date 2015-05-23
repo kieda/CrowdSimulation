@@ -1,5 +1,7 @@
 package edu.cmu.cs464.p3.ai.internal;
 
+import org.ejml.simple.SimpleMatrix;
+
 /**
  * The internal traits for a player, according to the CCCIP model
  * @author zkieda
@@ -45,5 +47,14 @@ public class InternalTraits {
 
     public double getPerception() {
         return perception;
+    }
+    public SimpleMatrix getVector(){
+        return new SimpleMatrix(new double[][]{{
+            getCommunication(), 
+            getConfidence(),
+            getCourage(),
+            getIntelligence(),
+            getPerception()
+        }}).transpose();
     }
 }

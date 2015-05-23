@@ -1,7 +1,6 @@
 package edu.cmu.cs464.p3.ai.core;
 
 
-
 import com.continuent.tungsten.fsm.core.FiniteStateException;
 import com.continuent.tungsten.fsm.core.State;
 import com.continuent.tungsten.fsm.core.StateMachine;
@@ -140,7 +139,6 @@ public class CaptureTheFlag implements Objective {
                 State enemyFlagTaken = findChild.apply(STATE_ENEMY_FLAG_TAKEN + ":" + STATE_OUR_FLAG_NOT_TAKEN);
                 State ourFlagTaken = findChild.apply(STATE_ENEMY_FLAG_NOT_TAKEN + ":" + STATE_OUR_FLAG_TAKEN);
                 State bothFlagsTaken = findChild.apply(STATE_ENEMY_FLAG_TAKEN + ":" + STATE_OUR_FLAG_TAKEN);
-
                 
                 return new State[][]{
                     {enemyFlagTaken, enemyFlagCaptured},
@@ -178,8 +176,8 @@ public class CaptureTheFlag implements Objective {
             StateTransitionBuilder builder = new StateTransitionBuilder(playerStateMap);
             
             State playerDone = new State(STATE_PLAYER_DONE, StateType.END);
-            
-            Function<State, State[][]> ourFlagTaken = ourFlagTakenFn(builder);
+
+            Function<State, State[][]> ourFlagTaken = CaptureTheFlag::ourFlagTakenFn;
             Function<State, State[][]> flagTaken = flagTakenFn(builder);
             
             Function<Function<State, State[][]>, Function<State, State[][]>> 

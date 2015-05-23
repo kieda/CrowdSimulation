@@ -19,6 +19,7 @@ package edu.cmu.cs464.p3.ai.internal;
  * subspace. We find high level actions that fit our current emotions by
  * searching inside this class.
  * 
+ * TODO 
  * @author zkieda
  */
 public class MultiProbabilisticSubspace<V> {
@@ -28,7 +29,7 @@ public class MultiProbabilisticSubspace<V> {
     //is a vector in n dimensions 
     //carries a value V and an uncertainty for each dimension d.
     public ProbabilisticVector<V> search(ProbabilisticSubspace key){
-        
+        return null;
     }
     
     //only need to insert spaces and search for them 

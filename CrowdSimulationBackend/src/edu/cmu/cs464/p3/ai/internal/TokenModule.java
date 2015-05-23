@@ -3,6 +3,7 @@ package edu.cmu.cs464.p3.ai.internal;
 import edu.cmu.cs464.p3.ai.core.SubModule;
 import edu.cmu.cs464.p3.ai.perception.FRCPLevel;
 import java.util.Arrays;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  * @author zkieda
@@ -17,21 +18,25 @@ public class TokenModule extends SubModule {
     
     private int[] tokens;   //current number of tokens
     private int[] tokenCap; //current token cap
+    private static int[] fromVector(SimpleMatrix mat){    
+        int[] re = new int[mat.numRows()];
+        Arrays.setAll(re, i -> (int)mat.get(i, 0));
+        return re;
+    }
+    
+    //TODO 
+    private final SimpleMatrix translationMat = new SimpleMatrix(
+            
+        );
     
     @Override
     public void init() {
         //find token amounts based on the player's traits.
         tokens = new int[5];
         tokenCap = new int[5];
-
-        //find and set the tokenCap
-        tokenCap[COMMUNICATION] = getPlayer().getTraits().getCommunicationTokens();
-        tokenCap[CONFIDENCE] = getPlayer().getTraits().getConfidenceTokens();
-        tokenCap[COURAGE] = getPlayer().getTraits().getCourageTokens();
-        tokenCap[INTELLIGENCE] = getPlayer().getTraits().getIntelligenceTokens();
-        tokenCap[PERCEPTION] = getPlayer().getTraits().getPerceptionTokens();
         
-        //todo find correct token amounts
+        //find and set the tokenCap
+        tokenCap = fromVector(translationMat.mult(getPlayer().getTraits().getVector()));
     }
     
     @Override
@@ -41,6 +46,10 @@ public class TokenModule extends SubModule {
         
         
         // don't think there's anything else
+    }
+    
+    public synchronized double remaining(int tokenType){
+        return (double)tokens[tokenType] / tokenCap[tokenType];
     }
     
     public synchronized int count(int tokenType){

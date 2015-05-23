@@ -27,11 +27,15 @@ public interface GameObject extends GameUpdatable{
     public default double thetaFromPoint(final Vector2d otherPos){
         return otherPos.angle(getPositionProperty().get());
     }
+    
+    //TODO
     public default double minThetaFromPoint(final Vector2d point){
         //point is the viewer.
         //what theta is the left edge of the game object from the viewer?
+        return 0;
     }
     public default double maxThetaFromPoint(final Vector2d point){
         //what theta is the right edge of the game object from the viewer?
+        return 0;
     }
 }

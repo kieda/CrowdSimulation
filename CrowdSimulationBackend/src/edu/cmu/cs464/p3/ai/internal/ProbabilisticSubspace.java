@@ -56,15 +56,21 @@ public class ProbabilisticSubspace {
         
     }
     
-    public ProbabilisticSubspace merge(ProbabilisticSubspace other){}
+    //TODO
+    public ProbabilisticSubspace merge(ProbabilisticSubspace other){
+        return null;
+    }
     
-    public ProbabilisticSubspace probabilityDiff(ProbabilisticSubspace other){}
+    public ProbabilisticSubspace probabilityDiff(ProbabilisticSubspace other){
+        return null;
+    }
     
     /**
      * gives the length of this space, also accounting for uncertainties
+     * TODO
      * @return 
      */
-    public double length(){}
+    public double length(){return 0;}
     
     public int getRank() {
         return rank;
