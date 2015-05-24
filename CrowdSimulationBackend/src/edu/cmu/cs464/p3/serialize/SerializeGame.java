@@ -1,11 +1,13 @@
 package edu.cmu.cs464.p3.serialize;
 
+import edu.cmu.cs464.p3.ai.core.Flag;
 import edu.cmu.cs464.p3.ai.core.Player;
 import edu.cmu.cs464.p3.ai.core.Player.PlayerState;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -21,7 +23,7 @@ import javax.vecmath.Vector2d;
  */
 public class SerializeGame {
     private OutputStreamWriter osr;
-    private AtomicInteger currentAgentID;
+    private AtomicReference currentAgentID;
     //onFrameEnd : () -> ()
     
     // add in : listener for game changes
@@ -32,10 +34,11 @@ public class SerializeGame {
         Consumer<Runnable> onNewFrame, 
         Consumer<Consumer<PlayerState>> onNewPlayer){
         osr = new OutputStreamWriter(os);
-        currentAgentID = new AtomicInteger(-1);
+        currentAgentID = new AtomicReference(null);
         onNewFrame.accept(this::endFrame);
         onNewPlayer.accept(this::addPlayerState);
     }
+    
     private synchronized void endFrame(){
         try{
             osr.write("\n(endframe)\n");
@@ -49,7 +52,17 @@ public class SerializeGame {
         return c.x + ","+ c.y + ","+ c.z;
     }
     
-    public void addPlayerState(PlayerState ps){
+    public void addFlagState(Flag.FlagState fs) {
+        final String fullName = "flag-"+fs.getTeamName();
+        fs.getPositionProperty().addListener(
+            (obj, oldVal, newVal) -> 
+                put(fullName, "position", vec2(newVal)));
+        fs.getPickedUpProperty().addListener(
+            (obj, oldVal, newVal) -> 
+                put(fullName, "pickedUp", "" + newVal.orElse(-1)));
+    }
+    
+    public void addPlayerState(PlayerState ps) {
         ps.isAttackingProperty().addListener(
             (obs, oldVal, newVal) -> 
                 put(ps.getAgentID(), "attacking", newVal.toString()));
@@ -70,12 +83,22 @@ public class SerializeGame {
                 put(ps.getAgentID(), "face", newVal.getName()));
         put(ps.getAgentID(), "team", ps.getTeamName());
     }
-    
+    private void put(String id, String key, String val){
+        synchronized(SerializeGame.this){
+            try{
+                if(currentAgentID.get() != null) osr.write("\n");
+                if(currentAgentID.compareAndSet(id, id)){
+                    osr.write(id + "=");
+                }
+                osr.write(key + ":" + val + ";");
+            } catch(IOException e){}
+        }
+    }
     private void put(final int agentID, String key, String val) {
         synchronized(SerializeGame.this){
             try{
+                if(currentAgentID.get() != null) osr.write("\n");
                 if(currentAgentID.compareAndSet(agentID, agentID)){
-                    if(currentAgentID.get() >= 0) osr.write("\n");
                     osr.write(agentID + "=");
                 }
                 osr.write(key + ":" + val + ";");

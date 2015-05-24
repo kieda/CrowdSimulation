@@ -24,10 +24,15 @@ public class TokenModule extends SubModule {
         return re;
     }
     
-    //TODO 
+    //TODO (currently simple translation)
     private final SimpleMatrix translationMat = new SimpleMatrix(
-            
-        );
+        new double[][]{
+            {1, 0, 0, 0, 0},
+            {0, 1, 0, 0, 0},
+            {0, 0, 1, 0, 0},
+            {0, 0, 0, 1, 0},
+            {0, 0, 0, 0, 1}
+        }).scale(10);
     
     @Override
     public void init() {

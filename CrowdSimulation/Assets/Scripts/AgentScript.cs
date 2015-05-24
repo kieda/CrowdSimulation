@@ -2,14 +2,11 @@
 using System.Collections;
 using AssemblyCSharp;
 using System;
+using System.Collections.Generic;
 
 public class AgentScript : MonoBehaviour {
 	public Material swordMaterial;
 
-	public static AgentScript init(MonoBehaviour gameObject){
-		AgentScript ag = gameObject.gameObject.AddComponent<AgentScript> () as AgentScript;
-		return ag;
-	}
 	void Start () {}
 	
 	// Update is called once per frame
@@ -28,8 +25,8 @@ public class AgentScript : MonoBehaviour {
 		transform.position = new Vector3 (v.x, 0.5f, v.y);
 	}
 
-	public void ChangeDirection(Vector2 v){
-		transform.LookAt (new Vector3(v.x, 0f, v.y) + transform.position);
+	public void ChangeDirection(double theta){
+		transform.LookAt (new Vector3((float)Math.Cos(theta), 0f, (float)Math.Sin(theta)) + transform.position);
 	}
 
 	public void ChangeAttacking(bool b){

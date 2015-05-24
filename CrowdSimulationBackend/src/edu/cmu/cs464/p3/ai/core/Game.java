@@ -52,7 +52,9 @@ public class Game implements Runnable {
             return g;
         };
     }
-    
+    void addFlag(Flag f){
+        gameSerialization.addFlagState(f.getFlagState());
+    }
     private void onNewFrameListener(Runnable r){
         newFrameListeners.add(r);
     }

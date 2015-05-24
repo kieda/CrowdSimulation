@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AssemblyCSharp
 {
-	public class AgentStream {
+	public class GameStream {
 		private StreamReader input;
 		public static Texture2D LoadTextureFromFile(string fileName){
 			Texture2D t2d = new Texture2D (2, 2);
@@ -15,7 +15,18 @@ namespace AssemblyCSharp
 		}
 
 		private Dictionary<string, Texture2D> textures;
+		private Dictionary<string, Texture2D> flagTextures;
 
+		public static Dictionary<string, Texture2D> loadTexs(Dictionary<string, string> textureMap){
+			Dictionary<string, Texture2D> texs = new Dictionary<string, Texture2D>();
+			foreach(var entry in textureMap){
+				Texture2D t2d = LoadTextureFromFile(entry.Value);
+				t2d.alphaIsTransparency = true;
+				t2d.wrapMode = TextureWrapMode.Clamp;
+				texs.Add (entry.Key, t2d);
+			}
+			return texs;
+		}
 		public void Start(){
 			Dictionary<string, string> textureMap = new Dictionary<string, string> ()
 			{
@@ -30,26 +41,80 @@ namespace AssemblyCSharp
 				{"sick", "./Assets/Faces/Sick.png"},
 				{"skeptical", "./Assets/Faces/Skeptical.png"}
 			};
-			textures = new Dictionary<string, Texture2D>();
-			foreach(var entry in textureMap){
-				Texture2D t2d = LoadTextureFromFile(entry.Value);
-				t2d.alphaIsTransparency = true;
-				t2d.wrapMode = TextureWrapMode.Clamp;
-				textures.Add (entry.Key, t2d);
-			}
+			textures = loadTexs (textureMap);
+
+			flagTextures = GameStream.loadTexs (new Dictionary<string, string> (){
+				{"red", "./Assets/Standard Assets/CrossPlatformInput/Sprites/ButtonBrakeUpSprite.png"},
+				{"blue", "./Assets/Standard Assets/CrossPlatformInput/Sprites/ButtonAcceleratorUpSprite.png"}
+			});
 		}
 
-		public AgentStream (StreamReader stream) {
+		private AgentScript currentFlagHolder;
+		private Dictionary<int, AgentScript> agents;
+		private Dictionary<string, FlagScript> flags;
+
+		public GameStream (StreamReader stream, Dictionary<int, AgentScript> agents, Dictionary<string, FlagScript> flags) {
 			this.input = stream;
+			this.agents = agents;
+			this.flags = flags;
 		}
 
+		private Vector2 parseVec2(String val){
+			string[] xy = val.Split(',');
+			float x = float.Parse(xy[0]), 
+			y = float.Parse(xy[1]);
+			Vector2 pos = new Vector2(x, y);
+			return pos;
+		}
 		//an action that takes a list of our agents, and updates each one
-		public Action<Dictionary<int, AgentScript>> getFrameUpdate(AgentScript gameObject) {
+
+		// getFrameUpdate : AgentScript x FlagScript -> Dictionary<int, AgentScript> -> ()
+		public Action<AgentAndFlagTuple> getFrameUpdate(AgentScript agentPrefab, FlagScript flagPrefab) {
 			Action<Dictionary<int, AgentScript>> res = dict => {};
+			Action<Dictionary<string, FlagScript>> resFlag = dict => {};
 			string str;
 			while ((str = input.ReadLine ()) != null) {
-				if(str.Equals("(endframe)")){
-					return res;
+				if(str.StartsWith("flag-")) {
+					string flagGroup = str.Substring("flag-".Length, str.IndexOf('=') - "flag-".Length);
+					string[] changes = (str.Split('=')[1]).Split(';');
+					Action<FlagScript> del = flag => {};
+					for(int i = 0; i < changes.Length; i++) {
+						string[] keyVal = changes[i].Split(':');
+						switch(keyVal[0]) {
+							case "position":{
+								Vector2 pos = parseVec2(keyVal[1]);
+								del += flag => {
+									flag.ChangePosition(pos);
+								};
+								break;
+							}
+							case "drop":{
+									Vector2 pos = parseVec2(keyVal[1]);
+									del += flag => {
+										flag.Drop(pos);
+									};
+									break;
+								}
+							case "pickedUp":{
+								int pickedUp = int.Parse(keyVal[1]);
+								del += flag => {flag.PickUp(agents[pickedUp]);};
+								break;
+							}
+						}
+					}
+					resFlag += (dict => {
+						if(!dict.ContainsKey(flagGroup)){
+							FlagScript fl = FlagScript.Instantiate (flagPrefab) as FlagScript;
+							fl.init(flagGroup, flagTextures);
+							dict.Add(flagGroup, fl);
+						}
+						del(dict[flagGroup]);
+					});
+				} else if(str.Equals("(endframe)")){
+					return tuple => {
+						res (tuple.getAgents());
+						resFlag (tuple.getFlags());
+					};
 				}else {
 					string[] vals = str.Split('=');
 					int id = int.Parse(vals[0]);
@@ -71,22 +136,17 @@ namespace AssemblyCSharp
 							del += a => {
 								a.ChangeMoodColor(c);
 							};
-							break;}
+							break;
+						}
 						case "position":{
-							string[] xy = keyVal[1].Split(',');
-							float x = float.Parse(xy[0]), 
-								y = float.Parse(xy[1]);
-							Vector2 pos = new Vector2(x, y);
+							Vector2 pos = parseVec2(keyVal[1]);
 							del += a => {
 								a.ChangePosition(pos);
 							};
 							break;
 						}
 						case "direction":{
-							string[] xy = keyVal[1].Split(',');
-							float x = float.Parse(xy[0]), 
-								y = float.Parse(xy[1]);
-							Vector2 dir = new Vector2(x, y);
+							double dir = Double.Parse(keyVal[1]);
 							del += a => {
 								a.ChangeDirection(dir);
 							};
@@ -113,13 +173,13 @@ namespace AssemblyCSharp
 						}
 						case "team":{
 							switch(keyVal[1]){
-							case "red":
-								del += a => a.SetTeamColor(Color.red);
-								break;
-							case "blue":
-								del += a => a.SetTeamColor(Color.blue);
-								break;
-							}
+								case "red":
+									del += a => a.SetTeamColor(Color.red);
+									break;
+								case "blue":
+									del += a => a.SetTeamColor(Color.blue);
+									break;
+								}
 							break;
 						}
 						}
@@ -128,7 +188,7 @@ namespace AssemblyCSharp
 					//then applies the delegate fn to all relevant ones
 					res += (dict => {
 						if(!dict.ContainsKey(id)){
-							AgentScript ag = AgentScript.Instantiate (gameObject) as AgentScript;
+							AgentScript ag = AgentScript.Instantiate (agentPrefab) as AgentScript;
 							//initialize a new AgentScript, place into dictionary
 							dict.Add(id, ag);
 						}

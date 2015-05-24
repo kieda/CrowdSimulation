@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\AgentScript.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\CoreScript.cs" />
+     <Compile Include="Assets\Scripts\FlagScript.cs" />
      <Compile Include="Assets\Scripts\GameStream.cs" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />

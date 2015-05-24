@@ -35,5 +35,4 @@ public class MultiProbabilisticSubspace<V> {
     //only need to insert spaces and search for them 
     //we could make this an interface, then have a faster (sampling)
     //method, and a slower method that attempts to get full accuracy.
-    
 }

@@ -92,7 +92,8 @@ public class Player extends MultiModule implements GameObject, Entity{
         final ReadOnlyObjectWrapper<Vector2d> position;
         final ReadOnlyObjectWrapper<Vector2d> direction;
         final ReadOnlyObjectWrapper<Face> face;
-
+        
+        
         PlayerState(){
             isDead = new ReadOnlyBooleanWrapper();
             isAttacking = new ReadOnlyBooleanWrapper();

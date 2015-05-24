@@ -7,6 +7,13 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author zkieda
  */
 public class ComparisonObjectProperty<T> extends ReadOnlyObjectWrapper<T> {
+
+    public ComparisonObjectProperty(T initialValue) {
+        super(initialValue);
+    }
+
+    public ComparisonObjectProperty() {}
+    
     @Override
     public void set(T newValue) {
         if (isBound()) {
