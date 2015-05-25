@@ -35,7 +35,7 @@ public abstract class Group implements Entity{
     
     public Player makePlayer(InternalTraits stats){
         Player p = new Player(this, game.newPlayerID(), stats);
-        game.registerNewPlayer(p);
+        game.addGameObject(p);
         players.add(p);
         return p;
     }

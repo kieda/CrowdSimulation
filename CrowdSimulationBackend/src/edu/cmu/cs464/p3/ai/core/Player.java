@@ -6,6 +6,9 @@ import edu.cmu.cs464.p3.ai.internal.InternalModule;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import edu.cmu.cs464.p3.ai.internal.TokenModule;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
+import static edu.cmu.cs464.p3.serialize.SerializeGame.color;
+import static edu.cmu.cs464.p3.serialize.SerializeGame.vec2;
+import java.util.function.BiConsumer;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -63,9 +66,8 @@ public class Player extends MultiModule implements GameObject, Entity{
         return 0.5;
     }
 
-    @Override
     public ReadOnlyObjectProperty<Vector2d> getPositionProperty() {
-        return playerState.positionProperty();
+        return playerState.getPositionProperty();
     }
 
     public InternalTraits getTraits() {
@@ -85,7 +87,7 @@ public class Player extends MultiModule implements GameObject, Entity{
      * 
      * @author zkieda
      */
-    public class PlayerState {
+    public class PlayerState implements State{
         final ReadOnlyBooleanWrapper isDead;
         final ReadOnlyBooleanWrapper isAttacking;
         final ReadOnlyObjectWrapper<Color3f> moodColor;
@@ -109,16 +111,16 @@ public class Player extends MultiModule implements GameObject, Entity{
         public ReadOnlyBooleanProperty isAttackingProperty(){
             return isAttacking.getReadOnlyProperty();
         }
-        public ReadOnlyObjectProperty<Color3f> moodColorProperty(){
+        public ReadOnlyObjectProperty<Color3f> getMoodColorProperty(){
             return moodColor.getReadOnlyProperty();
         }
-        public ReadOnlyObjectProperty<Vector2d> positionProperty(){
+        public ReadOnlyObjectProperty<Vector2d> getPositionProperty(){
             return position.getReadOnlyProperty();
         }
-        public ReadOnlyObjectProperty<Face> faceProperty(){
+        public ReadOnlyObjectProperty<Face> getFaceProperty(){
             return face.getReadOnlyProperty();
         }
-        public ReadOnlyObjectProperty<Vector2d> directionProperty(){
+        public ReadOnlyObjectProperty<Vector2d> getDirectionProperty(){
             return direction.getReadOnlyProperty();
         }
         public String getTeamName(){
@@ -129,8 +131,36 @@ public class Player extends MultiModule implements GameObject, Entity{
         }
     }
     
-    public PlayerState getPlayerState(){
+    public PlayerState getState(){
         return playerState;
+    }
+
+    @Override
+    public String getObjectID() {
+        return "" + agentID;
+    }
+    
+    public void initSerialize(BiConsumer<String, String> fn){
+        PlayerState ps = getState();
+        ps.isAttackingProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("attacking", newVal.toString()));
+        ps.isDeadProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("dead", newVal.toString()));
+        ps.getMoodColorProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("mood", color(newVal)));
+        ps.getPositionProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("position", vec2(newVal)));
+        ps.getDirectionProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("direction", vec2(newVal)));
+        ps.getFaceProperty().addListener(
+            (obs, oldVal, newVal) -> 
+                fn.accept("face", newVal.getName()));
+        fn.accept("team", ps.getTeamName());
     }
 }
 

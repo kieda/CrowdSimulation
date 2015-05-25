@@ -1,15 +1,10 @@
 package edu.cmu.cs464.p3.ai.core;
 
 import edu.cmu.cs464.p3.serialize.SerializeGame;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -17,21 +12,19 @@ import java.util.function.Function;
  * has rules built in.
  */
 public class Game implements Runnable {
-    private AtomicInteger currentPlayerID
-        = new AtomicInteger();
+    private AtomicInteger currentPlayerID = new AtomicInteger();
     private ArrayList<Group> groups;
     private SerializeGame gameSerialization;
     private List<Runnable> newFrameListeners;
     private List<GameUpdatable> gameUpdates;
-    private List<Consumer<Player.PlayerState>> newPlayerListeners;
     
     private Game(OutputStream out) {
         groups = new ArrayList<>();
         gameUpdates = new ArrayList<>();
-        newFrameListeners = new ArrayList<>();
-        newPlayerListeners = new ArrayList<>();
         
-        gameSerialization = new SerializeGame(out, this::onNewFrameListener, this::onNewPlayerListener);
+        newFrameListeners = new ArrayList<>();
+        
+        gameSerialization = new SerializeGame(out, this::onNewFrameListener);
     }
     public static Game makeGame(OutputStream out, InitialStateGenerator genFn) {
         Game g = new Game(out);
@@ -52,16 +45,17 @@ public class Game implements Runnable {
             return g;
         };
     }
-    void addFlag(Flag f){
-        gameSerialization.addFlagState(f.getFlagState());
+    
+    public void addGameObject(GameObject go){
+        gameUpdates.add(go);
+        final String id = go.getObjectID();
+        go.initSerialize((key, val)-> gameSerialization.put(id, key, val));
     }
+
     private void onNewFrameListener(Runnable r){
         newFrameListeners.add(r);
     }
-    private void onNewPlayerListener(Consumer<Player.PlayerState> p){
-        newPlayerListeners.add(p);
-    }
-    
+
     private boolean isEndGame(){        
         //check if all groups objectives are decidedly fulfilled or unfulfilled
         //note : objective status has ended if all players in group are dead
@@ -70,7 +64,7 @@ public class Game implements Runnable {
     void addGameUpdatable(GameUpdatable gu){
         gameUpdates.add(gu);
     }
-    void removeGameUpdatable(GameUpdatable gu){
+    void remove(GameUpdatable gu){
         gameUpdates.remove(gu);
     }
     @Override
@@ -87,10 +81,5 @@ public class Game implements Runnable {
     }
     int newPlayerID(){
         return currentPlayerID.incrementAndGet();
-    }
-    
-    void registerNewPlayer(Player p){
-        gameUpdates.add(p);
-        newPlayerListeners.forEach(pl -> pl.accept(p.getPlayerState()));
     }
 }
