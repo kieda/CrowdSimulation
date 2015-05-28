@@ -1,5 +1,7 @@
 package edu.cmu.cs464.p3.util;
 
+import java.util.Objects;
+
 /**
  * made since java doesn't natively support tuples?
  * @author zkieda
@@ -22,6 +24,30 @@ public class Tuple {
         public B get2() {
             return val2;
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(get1(), get2());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Tuple2<?, ?> other = (Tuple2<?, ?>) obj;
+            if (!Objects.equals(this.val1, other.val1)) {
+                return false;
+            }
+            if (!Objects.equals(this.val2, other.val2)) {
+                return false;
+            }
+            return true;
+        }
+
         
     }
     
@@ -35,6 +61,27 @@ public class Tuple {
         public C get3() {
             return val3;
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), get3());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Tuple3<?, ?, ?> other = (Tuple3<?, ?, ?>) obj;
+            if (!Objects.equals(this.val3, other.val3)) {
+                return false;
+            }
+            return super.equals(obj);
+        }
+        
     }
     
     public static class Tuple4<A, B, C, D> extends Tuple3<A, B, C>{
@@ -46,6 +93,26 @@ public class Tuple {
 
         public D get4() {
             return val4;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), get4());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Tuple4<?, ?, ?, ?> other = (Tuple4<?, ?, ?, ?>) obj;
+            if (!Objects.equals(this.val4, other.val4)) {
+                return false;
+            }
+            return super.equals(obj);
         }
     }
 }

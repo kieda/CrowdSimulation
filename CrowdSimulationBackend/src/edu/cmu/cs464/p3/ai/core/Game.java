@@ -26,6 +26,7 @@ public class Game implements Runnable {
         
         gameSerialization = new SerializeGame(out, this::onNewFrameListener);
     }
+    
     public static Game makeGame(OutputStream out, InitialStateGenerator genFn) {
         Game g = new Game(out);
         genFn.initialize(g::genGroupFn);

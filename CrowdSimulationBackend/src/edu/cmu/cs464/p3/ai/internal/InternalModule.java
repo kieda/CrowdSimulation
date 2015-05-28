@@ -31,6 +31,8 @@ public class InternalModule extends MultiModule{
         this.changeColorFn = changeColorFn;
         
         internalState = new EmotionLinearSystem();
+        internalState.addModule(new BasicEmotionGraphConstructor());
+        
         moodColor = new MoodColorModule();
         
         addModule(internalState);

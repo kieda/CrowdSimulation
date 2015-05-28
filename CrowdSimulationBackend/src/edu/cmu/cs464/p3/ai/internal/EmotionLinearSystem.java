@@ -1,5 +1,7 @@
 package edu.cmu.cs464.p3.ai.internal;
 
+import com.google.common.math.DoubleMath;
+import edu.cmu.cs464.p3.ai.core.MultiModule;
 import static edu.cmu.cs464.p3.util.MatrixUtil.fill;
 import static edu.cmu.cs464.p3.ai.internal.InternalModule.NUM_MOODS;
 import edu.cmu.cs464.p3.ai.core.SubModule;
@@ -10,6 +12,7 @@ import org.jgrapht.graph.SimpleGraph;
 import org.ejml.simple.SimpleMatrix;
 import edu.cmu.cs464.p3.util.Tuple;
 import java.util.Optional;
+import java.util.Set;
 /**
  * this is the linear system built from the graph [see section 5].
  * Every agent has this linear system. We update this system every timestep, 
@@ -17,7 +20,7 @@ import java.util.Optional;
  * 
  * @author zkieda
  */
-public class EmotionLinearSystem extends SubModule<InternalModule> {
+public class EmotionLinearSystem extends MultiModule<InternalModule> {
     
     /* TODO
      * main idea : 
@@ -33,19 +36,25 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
      * find a way to dampen the uncertainty in emotions. 
      */
     
-    static class MoodVertex {
-        private final int id;
-        
+    public static class MoodVertex {
         //fixed. Determines summation value at the vertex
         private final double c;
-
+        private final int id;
         public MoodVertex(int id, double c) {
             this.id = id;
             this.c = c;
         }
+
+        public double getConst() {
+            return c;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
     
-    static class MoodEdge {
+    public static class MoodEdge {
         //multiplied by our linear constraint.
         // + alpha is a negative correlation
         // - alpha is a positive correlation
@@ -58,8 +67,17 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
             this.lambda = lambda;
             this.alpha = alpha;
         }
+
+        public double getAlpha() {
+            return alpha;
+        }
+
+        public double getLambda() {
+            return lambda;
+        }
     }
     
+    //todo fill out vertices
     private MoodVertex[] vertices;
     private Graph<MoodVertex, MoodEdge> moodGraph;
     
@@ -69,31 +87,11 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
     //represents our linear program
     private LinearProgram emotionProgram;
     
-    private void addEdges(int fromVertex, int... toVerts){
-        for(int i : toVerts) 
-            moodGraph.addEdge(vertices[fromVertex], vertices[i]);
-    }
-    
     private void initMoodGraph(){
-        //todo - find out the correct initial values given
-        //the input CCCIP model
-//        getPlayer().getTraits()
-        
-        moodGraph = new SimpleGraph<>(
-                (v1, v2) -> new MoodEdge(0, 0)
-        );
-        vertices = new MoodVertex[NUM_MOODS];
-        for(int i = 0; i < NUM_MOODS; i++) {
-            MoodVertex mv = new MoodVertex(i, 0);
-            vertices[i] = mv;
-            moodGraph.addVertex(mv);
-        }
-        
-        addEdges(0, 1, 7, 4, 6);
-        addEdges(1, 2, 4, 5);
-        addEdges(2, 3, 5, 6);
-        addEdges(3, 7);
-        addEdges(5, 6);
+        moodGraph = getModuleByClass(InitialEmotionGraphConstructor.class).get().buildGraph();
+        Set<MoodVertex> vertices = moodGraph.vertexSet();
+        this.vertices = new MoodVertex[vertices.size()];
+        vertices.forEach(v -> this.vertices[v.getId()] = v);
     }
     
     private int numVerts(){
@@ -131,10 +129,10 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
         // j : sum_i {a_i + \lambda_i v_i}
         emotionProgram = new LinearProgram();
         
-        SimpleMatrix lambdas = new SimpleMatrix(numEdges(), numVerts());
+        SimpleMatrix lambdas = new SimpleMatrix(numVerts(), numVerts());
         SimpleMatrix consts = new SimpleMatrix(numVerts(), 1);
         SimpleMatrix ones = new SimpleMatrix(numVerts(), 1);
-        SimpleMatrix alphas = new SimpleMatrix(numEdges(), numVerts());
+        SimpleMatrix alphas = new SimpleMatrix(numVerts(), numVerts());
         
         fill(alphas, this::alpha);
         fill(lambdas, this::lambda);
@@ -176,6 +174,6 @@ public class EmotionLinearSystem extends SubModule<InternalModule> {
         } else{
             newEmotion = getEmotion();
         }
-        
+        //todo set new emotional state.
     }
 }

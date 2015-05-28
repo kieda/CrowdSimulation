@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  22 MAY 2015 14:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  25 MAY 2015 19:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -329,7 +329,7 @@ cmsy8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 ti10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
 t10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/symbols
 /msbm10.pfb>
-Output written on final-writeup.pdf (15 pages, 204507 bytes).
+Output written on final-writeup.pdf (15 pages, 204341 bytes).
 PDF statistics:
  109 PDF objects out of 1000 (max. 8388607)
  77 compressed objects within 1 object stream

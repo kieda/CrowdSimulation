@@ -30,6 +30,7 @@ public class Player extends MultiModule implements GameObject, Entity{
     private final InternalModule internal;
     
     private final PlayerActions playerActions;
+    private PlayerObjective objective;
     
     Player(Group g, int agentID, InternalTraits traits){
         this.agentTeam = g.getGroupName();
@@ -43,6 +44,8 @@ public class Player extends MultiModule implements GameObject, Entity{
             });
         init((MultiModule)null);
         init((Player)this);
+        
+        this.objective = g.getObjective().makePlayerObjective(this);
         
         tokens = new TokenModule();
         internal = new InternalModule();        
@@ -59,6 +62,7 @@ public class Player extends MultiModule implements GameObject, Entity{
         action.init(internal, perception, playerActions);
         internal.init(perception, playerActions::setMoodColor);
         perception.init(internal);
+        
     }
 
     @Override
@@ -161,6 +165,10 @@ public class Player extends MultiModule implements GameObject, Entity{
             (obs, oldVal, newVal) -> 
                 fn.accept("face", newVal.getName()));
         fn.accept("team", ps.getTeamName());
+    }
+    
+    public PlayerObjective getObjective(){
+        return objective;
     }
 }
 

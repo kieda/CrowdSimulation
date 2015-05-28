@@ -12,12 +12,25 @@ import java.util.stream.Stream;
  */
 public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> {
     private List<SubModule> modules = new ArrayList<>();
+    private boolean playerInitialized = false;
     public void addModule(SubModule module){
         modules.add(module);
-        module.init(getPlayer());
+        if(playerInitialized) module.init(getPlayer());
         module.init(this);
     }
 
+    //lazily initialize all modules added in case parent module is added 
+    //afterwards
+    @Override
+    public void init(Player player) {
+        if(!playerInitialized){
+            super.init(player); 
+            modules.forEach(m -> m.init(player));
+            playerInitialized = true;
+        }
+    }
+    
+    
     @Override
     public void onFrameUpdate() {
         modules.stream().forEachOrdered(Module::onFrameUpdate);

@@ -1,11 +1,6 @@
 package edu.cmu.cs464.p3.ai.core;
 
-import com.google.common.collect.MapMaker;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import edu.cmu.cs464.p3.serialize.SerializeGame;
-import edu.cmu.cs464.p3.util.Tuple;
-import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -98,8 +93,4 @@ public class Flag implements GameObject{
                 else fn.accept("drop", SerializeGame.vec2(state.getPositionProperty().get()));
             });
     }
-//    public Map<ReadOnlyProperty, Tuple.Tuple2<String, String>> serialize(){
-//        return Maps.asMap(
-//            Sets.immutableEnumSet(position, otherElements), null)
-//    }
 }

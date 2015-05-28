@@ -1,7 +1,5 @@
 package edu.cmu.cs464.p3.ai.core;
 
-
-
 import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import java.util.ArrayList;
@@ -35,6 +33,7 @@ public abstract class Group implements Entity{
     
     public Player makePlayer(InternalTraits stats){
         Player p = new Player(this, game.newPlayerID(), stats);
+        
         game.addGameObject(p);
         players.add(p);
         return p;
