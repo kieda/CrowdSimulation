@@ -2,6 +2,7 @@ package edu.cmu.cs464.p3.ai.core;
 
 import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
+import edu.cmu.cs464.p3.util.quadtree.QuadTree;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -46,6 +47,12 @@ public abstract class Group implements Entity{
     public void removePlayer(Player p){
         players.remove(p);
     }
+    
+    
+    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace(){
+        return game.getGameSpace();
+    }
+    
     
     /**
      * overridden by subclasses to determine the behavior of the group in the

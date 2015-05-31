@@ -3,9 +3,11 @@ package edu.cmu.cs464.p3.ai.core;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import edu.cmu.cs464.p3.util.OpenSimplexNoise;
 import edu.cmu.cs464.p3.util.PointToRealFn;
+import edu.cmu.cs464.p3.util.Properties;
 import java.awt.Dimension;
 import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -31,7 +33,7 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
     private final int blueTeamPlayerCount;
     private final Random gen = new Random();
     private final double boardWidth =  24.5;
-    private final Bounds boardDimensions = new BoundingBox(-boardWidth, -boardWidth, boardWidth, boardWidth);
+    private final Bounds boardDimensions = new BoundingBox(-boardWidth, -boardWidth, 2*boardWidth, 2*boardWidth);
     private final PointToRealFn boardGenerator = new OpenSimplexNoise();
 
     
@@ -58,7 +60,8 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
     }
     
     @Override
-    public void initialize(Function<Function<Group, Objective>, Function<String, Group>> handle) {
+    public void initialize(Function<Function<Group, Objective>, Function<String, Group>> handle, 
+            Properties gameSettings) {
         final Function<String, Group> ctfFactory = handle.apply(CaptureTheFlag::new);
         final Group red = ctfFactory.apply("red");
         final Group blue = ctfFactory.apply("blue");
@@ -66,7 +69,7 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
         //todo - 1. add in players
         // 2. add in flags
         
-        
+        gameSettings.put(Game.PROPERTY_GAME_BOUNDS, boardDimensions);
         
     }
 }

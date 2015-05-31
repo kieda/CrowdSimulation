@@ -1,35 +1,28 @@
 [Todo List]
 
+Housekeeping : 
+    move all libraries into a dedicated .lib folder
+
 Internal Package : 
     
     3) EmotionLinearSystem: 
-        find out initial multiprobabilisticsubspace for emotions
+        finish initial multiprobabilisticsubspace for emotions
         find out how to modify the multiprobabilisticsubspace after we step in the LP
         
         (some linalg)
     3.5) find out threshold change for moodcolor, rest of multiprobabilityspace
         utility methods
-    4) TokenModule (Max)
-        find out how to translate the CCCIP to tokens.
-        
-        (some linalg)
+    4) TokenModule - improve translation function from CCCIP to tokens
     5) Probabilistic Subspace, MultiProbabilistic Subspace
         find out interaction
         find out a method to take the intersection of two
     6) find out PerceptionEmotionChange subclasses
 
-TODO IMPORTANT : stabilize the internal game mechanics
-make sure everything is working with respect to the game itself 
-construct our objective and framework for making objectives.
-
-Then (and only then) we can start testing the game and adding in components.
-
-
-TODO 2 : add flag item into the game. Keep track of flag position.
 
 --- 
 later : memory module and estimate health module based on perception
 
 Core/Game : 
-    -- find out how we can determine everyone's field of view
-        (octree???)
+    -- Use the quadtree to find out an agent's field of view
+        a. determine a data structure for storing the field of view
+        b. implement algorithm to determine GameObjects in the agent's sight.

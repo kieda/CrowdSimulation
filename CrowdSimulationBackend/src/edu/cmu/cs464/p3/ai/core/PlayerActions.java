@@ -15,7 +15,7 @@ public class PlayerActions {
         playerState.position.set(pos);
     }
     
-    public void setDirection(Vector2d dir){
+    public void setDirection(double dir){
         playerState.direction.set(dir);
     }
     

@@ -1,12 +1,19 @@
 package edu.cmu.cs464.p3.ai.core;
 
 import edu.cmu.cs464.p3.serialize.SerializeGame;
+import edu.cmu.cs464.p3.util.Properties;
+import edu.cmu.cs464.p3.util.quadtree.QuadTree;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-
+import javafx.geometry.Bounds;
+import javax.vecmath.Vector2d;
+        
 /**
  * represents the game that will be played.
  * has rules built in.
@@ -17,8 +24,17 @@ public class Game implements Runnable {
     private SerializeGame gameSerialization;
     private List<Runnable> newFrameListeners;
     private List<GameUpdatable> gameUpdates;
+    private QuadTree<GameObject> gameSpace;
+    
+    public static final String PROPERTY_GAME_BOUNDS = "GameBounds";
+    
+    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace(){
+        return gameSpace.getImmutable();
+    }
     
     private Game(OutputStream out) {
+        // todo - some way for the initial state to tell the
+        // gameSpace the size of the field.
         groups = new ArrayList<>();
         gameUpdates = new ArrayList<>();
         
@@ -26,10 +42,20 @@ public class Game implements Runnable {
         
         gameSerialization = new SerializeGame(out, this::onNewFrameListener);
     }
+
+
+    //construct from the game settings
+    private void build(Properties gs){
+        Bounds b = gs.get(PROPERTY_GAME_BOUNDS);
+        gameSpace = new QuadTree<>(b.getMinX(), b.getMinY(), b.getMaxX(), b.getMaxY());
+    }
+    
     
     public static Game makeGame(OutputStream out, InitialStateGenerator genFn) {
         Game g = new Game(out);
-        genFn.initialize(g::genGroupFn);
+        Properties gs = new Properties();
+        genFn.initialize(g::genGroupFn, gs);
+        g.build(gs);
         return g;
     }
     
@@ -51,6 +77,12 @@ public class Game implements Runnable {
         gameUpdates.add(go);
         final String id = go.getObjectID();
         go.initSerialize((key, val)-> gameSerialization.put(id, key, val));
+        Vector2d pos = go.getState().getPositionProperty().get();
+        gameSpace.put(pos, go);
+        go.getState().getPositionProperty().addListener((evt, oldVal, newVal) -> {
+            GameObject g = gameSpace.get(oldVal);
+            gameSpace.put(newVal, g);
+        });
     }
 
     private void onNewFrameListener(Runnable r){
@@ -71,6 +103,9 @@ public class Game implements Runnable {
     @Override
     public void run(){
         while(!isEndGame()) step();
+        try{
+            gameSerialization.close();
+        }catch(IOException e){}
     }
     //called until checkEndGame() returns false.
     private void step(){

@@ -1,0 +1,47 @@
+
+
+% Splitting Interval Table
+
+% main ideas : 
+% 1. refactor table only when we have a new interval that's smaller.
+% 2. randomized algorithm
+% 3. use a hashcode variant. This forms a 1-D grid of buckets.
+% 4. when we're searching a bucket : only a constant number of sub-buckets we need to check.
+% 5. reverse analysis : remove a line from the intervals. chance we removed the smallest interval is at most 2/I, I is total intervals.
+% 6. for spectators : adding a spectator adds at most 2 splits.
+% Expected cost : 
+%   sum_{i=2}^I i * 2/i \in O(I)
+
+\documentclass[11pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\setlength\parindent{0pt}
+\begin{document}
+\title{Splitting Interval Table}
+\author{Zachary Kieda (zkieda@andrew.cmu.edu)}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+\setlength\parindent{0pt}
+\noindent 
+We present a data structure that can map a real interval to an object.\\
+This structure builds intervals by splitting an interval in two,
+and has amortized constant time lookup and insertion. This is a better 
+runtime than BST interval structures, which have $\log n$ look up and
+insertion time.\\
+
+\textbf{Keywords.} Data Structures
+\end{abstract}
+\begin{section}{Proposed Solution}
+We keep a hash table $H$ to store our intervals, and just perform a good hashing that will provide us with a good run time.\\
+
+\begin{subsection}{Limitations}
+Unlike other data structures, this one does not have the ability to perform range queries (getting all intervals in some search interval). The structure we propose will only search using a point as a key, and will find its containing interval.\\
+
+It is possible, however, to extend this data structure to give this ability in $O(r)$ time, where $r$ is the number of items that are in our search interval. We store a singly linked list at each interval that points to its next largest interval. If this is achieved, when searching in the interval $[i, j]$, we only need to find $i$ in our interval table. Then, we can traverse the linked list till we reach an interval that exceeds $j$. \\
+
+To modify the linked list on insertion: We insert a split at position $k$ in the interval $I$. $I$, by our invariant, has a node $N$ linking to the next interval $N'$ in our sequence. We split $I$ in two, the left interval holds our old node. We create a new node $N_0$ for the right interval, such that the next item is $N'$. Then, we set the next node of $N$ to $N_0$. \\ 
+\end{section}
+\end{section}
+\end{document}

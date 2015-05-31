@@ -5,18 +5,23 @@ import edu.cmu.cs464.p3.ai.action.ActionModule;
 import edu.cmu.cs464.p3.ai.internal.InternalModule;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import edu.cmu.cs464.p3.ai.internal.TokenModule;
+import edu.cmu.cs464.p3.ai.perception.FieldOfVisionModule;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 import static edu.cmu.cs464.p3.serialize.SerializeGame.color;
 import static edu.cmu.cs464.p3.serialize.SerializeGame.vec2;
+import edu.cmu.cs464.p3.util.quadtree.QuadTree;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector2d;
 
-public class Player extends MultiModule implements GameObject, Entity{
+public class Player extends MultiModule implements Spectator, Entity{
     private int hitPoints;
     private int attackPoints;
     private final int agentID;
@@ -32,11 +37,14 @@ public class Player extends MultiModule implements GameObject, Entity{
     private final PlayerActions playerActions;
     private PlayerObjective objective;
     
+    private final QuadTree<GameObject>.QuadTreeImmutable gameSpaceView;
+    
     Player(Group g, int agentID, InternalTraits traits){
         this.agentTeam = g.getGroupName();
         this.agentID = agentID;
         this.playerState = new PlayerState();
         this.traits = traits;
+        this.gameSpaceView = g.getGameSpace();
         
         playerState.isDead.addListener(
             (obj, oldVal, newVal) -> {
@@ -81,6 +89,17 @@ public class Player extends MultiModule implements GameObject, Entity{
     public TokenModule getTokenModule() {
         return tokens;
     }
+
+    @Override
+    public ReadOnlyDoubleProperty directionProperty() {
+        return playerState.getDirectionProperty();
+    }
+
+    @Override
+    public double getFieldOfVision() {
+        Optional<FieldOfVisionModule> fm = perception.getModuleByClass(FieldOfVisionModule.class);
+        return fm.get().getFieldOfVision();
+    }
     
     /**
      * Models the front-end aspects of the player. 
@@ -96,7 +115,7 @@ public class Player extends MultiModule implements GameObject, Entity{
         final ReadOnlyBooleanWrapper isAttacking;
         final ReadOnlyObjectWrapper<Color3f> moodColor;
         final ReadOnlyObjectWrapper<Vector2d> position;
-        final ReadOnlyObjectWrapper<Vector2d> direction;
+        final ReadOnlyDoubleWrapper direction;
         final ReadOnlyObjectWrapper<Face> face;
         
         
@@ -105,7 +124,7 @@ public class Player extends MultiModule implements GameObject, Entity{
             isAttacking = new ReadOnlyBooleanWrapper();
             moodColor = new ComparisonObjectProperty<>();
             position = new ComparisonObjectProperty<>();
-            direction = new ComparisonObjectProperty<>();
+            direction = new ReadOnlyDoubleWrapper() ;
             face = new ComparisonObjectProperty<>();
         }
 
@@ -124,7 +143,7 @@ public class Player extends MultiModule implements GameObject, Entity{
         public ReadOnlyObjectProperty<Face> getFaceProperty(){
             return face.getReadOnlyProperty();
         }
-        public ReadOnlyObjectProperty<Vector2d> getDirectionProperty(){
+        public ReadOnlyDoubleProperty getDirectionProperty(){
             return direction.getReadOnlyProperty();
         }
         public String getTeamName(){
@@ -160,7 +179,7 @@ public class Player extends MultiModule implements GameObject, Entity{
                 fn.accept("position", vec2(newVal)));
         ps.getDirectionProperty().addListener(
             (obs, oldVal, newVal) -> 
-                fn.accept("direction", vec2(newVal)));
+                fn.accept("direction", newVal +  ""));
         ps.getFaceProperty().addListener(
             (obs, oldVal, newVal) -> 
                 fn.accept("face", newVal.getName()));
@@ -170,6 +189,12 @@ public class Player extends MultiModule implements GameObject, Entity{
     public PlayerObjective getObjective(){
         return objective;
     }
+
+    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace() {
+        return gameSpaceView;
+    }
+    
+    
 }
 
 

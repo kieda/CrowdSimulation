@@ -8,5 +8,4 @@ import edu.cmu.cs464.p3.ai.core.Player;
  * @author zkieda
  */
 public class FieldOfView {
-    private QuadTree<GameObject> objectsOnField;
 }
