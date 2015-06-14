@@ -1,0 +1,49 @@
+package edu.cmu.cs464.p3.modulelang.ast
+
+import java.util.stream.Collectors
+
+/**
+ * @author zkieda
+ */
+object ToString {
+  private def toString (x: Node, i : Int) : String = {
+    val spacing::_ = if(i == 0) List("") else List.iterate("", i)((spacing:String) => spacing + "  ").reverse
+    
+    x match {
+      case Program(imports, baseModule) => 
+        (if(!imports.isEmpty()) 
+          spacing + "import\n" + 
+          {
+            var S : String = ""
+            for(j <- 0 until imports.size()) S = spacing + "  " + toString(imports.get(j), i+1) + "\n"
+            S
+          } + 
+          spacing + "end\n" else "") + toString(baseModule, i+1) + "\n"
+      case JavaRef(path) => path.stream().collect(Collectors.joining("."))
+      case ModuleImport(path) => spacing + {
+        var L : List[String] = List()
+        for(j <- 0 until path.size()){
+          L = toString(path.get(j), i+1)::L
+        }
+        L.reverse.mkString(".");
+      }
+      case ParsedModule(baseClass, children) => 
+        spacing + toString(baseClass, i+1) + (
+          children.size() match {
+            case 0 => ""
+            case 1 => ":" + toString(children.get(0), i+1)
+            case _ => ": has\n" + {
+               var L : List[String] = List()
+               for(j <- 0 until children.size()) L = spacing + "  "+ toString(children.get(j), i+1)::L
+               L.reverse.mkString("\n")
+            } + "end\n"
+          }
+      )
+        
+      case Star() => "*"
+      case Ident(id) => id
+    }
+  }
+  
+  def genString (x : Node) : String = toString(x, 0)
+}

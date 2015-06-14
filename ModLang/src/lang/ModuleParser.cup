@@ -1,0 +1,107 @@
+package edu.cmu.cs464.p3.modulelang;
+
+import java.util.*;
+import java.io.*;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import java_cup.runtime.ComplexSymbolFactory;
+import edu.cmu.cs464.p3.modulelang.ast.*;
+
+parser code {:
+  public boolean syntaxErrors;
+
+
+  Lexer lexer;
+ 
+  public Parser(Lexer lex, ComplexSymbolFactory sf) {
+    super(lex,sf);
+    lexer = lex;
+  }
+
+  private ParsedModule module(List<String> baseClass, List<ParsedModule> children){
+    return new ParsedModule(new JavaRef(baseClass), children);
+  }
+:}; 
+
+/* IMPORT, HAS, END, IDENT, COLON, DOT */
+terminal         HAS, END, COLON, IMPORT, DOT, STAR;
+terminal String  IDENT;
+
+/* represents our final program */
+non terminal Program      program;
+
+/* represents the ast for a module */
+non terminal ParsedModule          module;
+
+/* A list of identifiers that defines a java path to a class*/
+non terminal LinkedList<ImportToken>  moduleImport;
+non terminal LinkedList<String>       javaRef; 
+non terminal LinkedList<ParsedModule> moduleList;
+non terminal LinkedList<ModuleImport> imports;
+non terminal LinkedList<ModuleImport> importList;
+
+precedence left COLON, DOT;
+program  ::= imports:il module:m
+    {: RESULT = new Program(il, m); :}
+    | module:m
+    {: RESULT = new Program(new LinkedList<>(), m); :}
+    ;
+javaRef ::= IDENT:i DOT javaRef:jr
+    {: jr.addFirst(i); RESULT = jr; :}
+    | IDENT:i
+    {:  
+        LinkedList<String> ll = new LinkedList<>(); 
+        ll.add(i);
+        RESULT = ll;
+    :}
+    ;
+module ::= javaRef:j
+    {: RESULT = module(j, new LinkedList<>()); :}
+    | javaRef:j COLON HAS moduleList:l END
+    {: RESULT = module(j, l); :}
+    | javaRef:j COLON HAS END
+    {: RESULT = module(j, new LinkedList<>()); :}
+    | javaRef:j COLON module:m
+    {:
+        LinkedList<ParsedModule> l = new LinkedList<>(); 
+        l.addFirst(m);
+        RESULT = module(j, l); 
+    :}
+    ;
+moduleList ::= module:m moduleList:ml
+    {: ml.addFirst(m); RESULT = ml; :}
+    | module:m
+    {: LinkedList<ParsedModule> l = new LinkedList<>(); l.add(m); RESULT = l; :}
+    ;
+moduleImport ::= IDENT:i DOT STAR
+    {: 
+        LinkedList<ImportToken> ll = new LinkedList<>();
+        
+        ll.addFirst(ImportToken.star());
+        ll.addFirst(ImportToken.ident(i));
+        
+        RESULT = ll;
+    :}
+    | IDENT:i
+    {: 
+        LinkedList<ImportToken> ll = new LinkedList<>();
+        ll.add(ImportToken.ident(i));
+        RESULT = ll;
+    :}
+    | IDENT:i DOT moduleImport:imp
+    {: 
+        imp.addFirst(ImportToken.ident(i));
+        RESULT = imp;
+    :}
+    ;
+imports ::= IMPORT END 
+    {: RESULT = new LinkedList<>(); :}
+    | IMPORT importList:il END
+    {: RESULT = il; :}
+    ;
+importList ::= moduleImport:j importList:jrl
+    {: jrl.addFirst(new ModuleImport(j)); RESULT = jrl; :}
+    | moduleImport:j 
+    {: LinkedList<ModuleImport> l = new LinkedList<>(); l.add(new ModuleImport(j)); RESULT = l; :}    
+    ;

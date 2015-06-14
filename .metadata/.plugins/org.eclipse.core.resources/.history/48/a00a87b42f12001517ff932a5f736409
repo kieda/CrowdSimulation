@@ -1,0 +1,7 @@
+package edu.cmu.cs464.p3.modulelang;
+
+public class ModLangLinkingError extends Error{
+	public ModLangLinkingError() {
+	}
+	
+}

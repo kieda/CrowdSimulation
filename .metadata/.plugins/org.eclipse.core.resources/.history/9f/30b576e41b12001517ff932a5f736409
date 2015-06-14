@@ -1,0 +1,9 @@
+package edu.cmu.cs464.p3.modulelang.ast
+import 
+/**
+ * @author zkieda
+ */
+class JavaRef(val path : java.util.List[String]) {
+  private def ref : String = path.mkString(", ")
+  override def toString() = ref
+}

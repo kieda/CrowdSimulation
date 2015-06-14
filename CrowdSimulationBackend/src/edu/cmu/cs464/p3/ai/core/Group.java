@@ -49,9 +49,9 @@ public abstract class Group implements Entity{
     }
     
     
-    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace(){
-        return game.getGameSpace();
-    }
+//    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace(){
+//        return game.getGameSpace();
+//    }
     
     
     /**

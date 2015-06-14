@@ -5,7 +5,7 @@ package edu.cmu.cs464.p3.ai.core;
  */
 public class Module implements GameUpdatable {
     private Player player;
-    public void init(Player player){
+    public void initPlayer(Player player){
         this.player = player;
         init();
     }

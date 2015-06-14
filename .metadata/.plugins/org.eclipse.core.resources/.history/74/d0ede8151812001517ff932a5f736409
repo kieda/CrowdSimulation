@@ -1,0 +1,52 @@
+package edu.cmu.cs464.p3.modulelang.ast
+
+/**
+ * @author zkieda
+ */
+abstract class ImportToken 
+case class Star() extends ImportToken
+case class Ident(id : String) extends ImportToken
+  
+object ImportToken{
+  def star(){
+    Star()
+  }
+  def ident(id : String){
+    Ident(id)
+  }
+}
+  
+//  package edu.cmu.cs464.p3.modulelang.ast;
+//package edu.cmu.cs464.p3.modulelang.ast;
+//
+///**
+// * @author zkieda
+// */
+//public interface ImportToken {
+//    public static ImportToken star(){return new StarImport();}
+//    public static ImportToken ident(String i){return new StringImport(i);}
+//    
+//    public class StarImport implements ImportToken{
+//        private StarImport(){}
+//
+//        @Override
+//        public String getName() {
+//            return "*";
+//        }
+//    }
+//    public class StringImport implements ImportToken{
+//        private final String ident;
+//        private StringImport(String ident){
+//            this.ident = ident;
+//        }
+//
+//        @Override
+//        public String getName() {
+//            return ident;
+//        }
+//    }
+//    
+//    public String getName();
+//}
+
+//}

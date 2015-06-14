@@ -1,0 +1,8 @@
+package edu.cmu.cs464.p3.modulelang.ast
+
+/**
+ * @author zkieda
+ */
+object ToString {
+  def toString
+}

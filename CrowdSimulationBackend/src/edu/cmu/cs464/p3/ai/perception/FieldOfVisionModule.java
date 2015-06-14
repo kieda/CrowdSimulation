@@ -25,7 +25,7 @@ public class FieldOfVisionModule extends SubModule<PerceptionModule>{
     public void onFrameUpdate() {
         //we use the game space to find out the field of vision independently
         //and with relative speed.
-        QuadTree<GameObject>.QuadTreeImmutable qti = getPlayer().getGameSpace();
+//        QuadTree<GameObject>.QuadTreeImmutable qti = getPlayer().getGameSpace();
         
     }
     

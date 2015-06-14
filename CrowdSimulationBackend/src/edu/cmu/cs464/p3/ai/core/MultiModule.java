@@ -15,17 +15,17 @@ public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> 
     private boolean playerInitialized = false;
     public void addModule(SubModule module){
         modules.add(module);
-        if(playerInitialized) module.init(getPlayer());
+        if(playerInitialized) module.initPlayer(getPlayer());
         module.init(this);
     }
 
     //lazily initialize all modules added in case parent module is added 
     //afterwards
     @Override
-    public void init(Player player) {
+    public void initPlayer(Player player) {
         if(!playerInitialized){
-            super.init(player); 
-            modules.forEach(m -> m.init(player));
+            super.initPlayer(player); 
+            modules.forEach(m -> m.initPlayer(player));
             playerInitialized = true;
         }
     }

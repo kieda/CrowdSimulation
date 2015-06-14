@@ -1,0 +1,24 @@
+package edu.cmu.cs464.p3.modulelang.ast
+
+/**
+ * @author zkieda
+ */
+trait HasName{
+  def getName() : String
+}
+abstract class ImportToken extends HasName
+case class Star() extends ImportToken {
+  def getName() = "*"
+}
+case class Ident(id : String) extends ImportToken {
+  def getName() = id
+}
+
+
+object ImportToken{
+  def star() : ImportToken = 
+    Star()
+  
+  def ident(id : String) : ImportToken = 
+    Ident(id)
+}

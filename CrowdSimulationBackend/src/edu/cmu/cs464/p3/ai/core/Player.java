@@ -37,21 +37,21 @@ public class Player extends MultiModule implements Spectator, Entity{
     private final PlayerActions playerActions;
     private PlayerObjective objective;
     
-    private final QuadTree<GameObject>.QuadTreeImmutable gameSpaceView;
+//    private final QuadTree<GameObject>.QuadTreeImmutable gameSpaceView;
     
     Player(Group g, int agentID, InternalTraits traits){
         this.agentTeam = g.getGroupName();
         this.agentID = agentID;
         this.playerState = new PlayerState();
         this.traits = traits;
-        this.gameSpaceView = g.getGameSpace();
+//        this.gameSpaceView = g.getGameSpace();
         
         playerState.isDead.addListener(
             (obj, oldVal, newVal) -> {
                 if(newVal) g.removePlayer(Player.this);
             });
         init((MultiModule)null);
-        init((Player)this);
+        initPlayer((Player)this);
         
         this.objective = g.getObjective().makePlayerObjective(this);
         
@@ -190,9 +190,9 @@ public class Player extends MultiModule implements Spectator, Entity{
         return objective;
     }
 
-    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace() {
-        return gameSpaceView;
-    }
+//    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace() {
+//        return gameSpaceView;
+//    }
     
     
 }

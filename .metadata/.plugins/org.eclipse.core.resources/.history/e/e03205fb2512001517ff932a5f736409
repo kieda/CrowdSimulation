@@ -1,0 +1,33 @@
+package edu.cmu.cs464.p3.modulelang;
+
+import edu.cmu.cs464.p3.modulelang.Lexer;
+import edu.cmu.cs464.p3.modulelang.Parser;
+import edu.cmu.cs464.p3.modulelang.ast.ImportToken;
+import edu.cmu.cs464.p3.modulelang.ast.Program;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.Scanner;
+import java_cup.runtime.ScannerBuffer;
+
+/**
+ * @author zkieda
+ */
+public class ParseProgram {
+    public static Program parse(InputStream in) throws Exception{
+        ComplexSymbolFactory symbolFactory = new ComplexSymbolFactory();
+        Scanner s = new Lexer(new InputStreamReader(in), symbolFactory);
+        ScannerBuffer sb = new ScannerBuffer(s);
+        Parser p = new Parser(s, symbolFactory);
+        
+        return (Program)p.parse().value;
+    }
+    
+    public static void main(String args[]) throws Exception{
+    	System.out.println(parse(new ByteArrayInputStream("asdf".getBytes())));
+    }
+}

@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\setlength\parindent{0pt}
+\begin{document}
+\title{Multiple Spectator Problem}
+\author{Zachary Kieda (zkieda@andrew.cmu.edu)}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+\setlength\parindent{0pt}
+\noindent 
+We present an algorithm that coalesces a sorted sequence of intervals to find a holistic interval which does not include overlaps. This is doable in $O(n)$, which is an improvement from the $O(n\log n)$ scan-line algorithm. 
+\textbf{Keywords.} Algorithms, Data Structures
+\end{abstract}
+\begin{section}{Problem Statement}
+Consider a list of intervals $L$ that is ordered from front to back. Intervals may or may not overlap, but when they do an interval from the front takes precedence. For all intervals $i, j \in L$ where $i < j$ will have length $len(i) \le len(j)$. We are also provided with a left to right sorting $S$ on the intervals, such that for all $i,j\in L$, $S(i) < S(j)$ iff the lowest point on the interval $i$ is less than the lowest point on interval $j$. $S(k)$ represents the index of interval $k$.
+\end{section}
+\begin{section}{Proposed Solution}
+We scan the list $L$ from front to back. We store an array $A$ that maps an index to a range. 
+\begin{itemize}
+\item For $l\in L$, Let $rng$ be a new interval with properties $hi$ and $lo$. 
+\begin{itemize}
+\item If $l$ is not the first index and the previous item in $A$ is non null, $rng.lo = max(A(S(l.prev).maxVal, l.lo)$. Otherwise, $rng.lo = l.lo$
+\item If $l$ is not the last index and the next item in $A$ is non null, $rng.hi = min(A(S(l.next).minVal, l.hi)$. Otherwise, $rng.hi = l.hi$.
+\item Set $A[l] = rng$
+\end{itemize}
+\item Scan through each $rng \in L$, if $rng.hi \le rng.lo$, remove the interval. (Or, do not append the item to a newly created array)
+\item return $A$.
+\end{itemize}
+Where $l.maxVal := max(l.hi, l.lo)$, $l.minVal := min(l.hi, lo)$.\\
+
+\textbf{Correctness.} Suppose we're on some $l\in L$. If the previous item in $A$ does not exist, then there is no element that is above 
+this element and to the left. So, $rng.lo$ will be seen in our final interval range
+
+%     X X X X 
+% X X X X 
+% -> 
+%     X X X X
+% X X X X X X 
+
+% so
+
+%     X X X X
+%                 X X X X
+%           X X X X
+% -> 
+%     X X X X
+%                 X X X X 
+%             X X 
+
+%   X X X X
+% X X X X 		<- this interval cannot possibly exceed that of its parent
+%     X X X X 
+
+%   X X X X X X     [0, 5]
+%       X X X       [2, 4]
+%             X X X [5, 7]
+
+%   X X X X X X     [0, 5]
+%       X X X X     [5, 4]
+%             X X X [5, 7]
+
+%   X X X X X X     [0, 5]
+%       X X X X     [5, 4]
+%               X X [6, 7]
+
+% alt
+%         X X X     [3, 5]
+%       X X X       [2, 4]
+%             X X X [5, 7]
+
+%         X X X     [3, 5]
+%       X X X X     [2, 4]
+%             X X X [5, 7]
+
+%         X X X     [3, 5]
+%       X X X X     [2, 4]
+%               X X [5, 7]
+
+\end{section}
+\end{document}

@@ -1,0 +1,31 @@
+package edu.cmu.cs464.p3.modulelang.ast
+import java.util.{List => JList}
+import java.util.stream.Collectors
+/**
+ * @author zkieda
+ */
+class JavaRef(path : JList[String]) {
+  private def ref : String = path.stream().collect(Collectors.joining(", "))
+  override def toString() = ref
+}
+public class ModuleImport {
+    private List<ImportToken> path;
+    private String ref;
+    public ModuleImport(List<ImportToken> path){
+        this.path = path;
+        this.ref = path.stream().map(ImportToken::toString).collect(Collectors.joining("."));
+    }
+
+    public List<ImportToken> getPath() {
+        return path;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    @Override
+    public String toString() {
+        return ref;
+    }
+}

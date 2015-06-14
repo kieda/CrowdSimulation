@@ -1,0 +1,242 @@
+\documentclass[11pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{mathpartir}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\setlength\parindent{0pt}
+\newcommand\DOT{\textbf{dot}}
+\newcommand\COLON{\textbf{colon}}
+\newcommand\STAR{\textbf{star}}
+\newcommand\IDENT{\textbf{ident}}
+\newcommand\HAS{\textbf{has}}
+\newcommand\IMPORT{\textbf{import}}
+\newcommand\END{\textbf{end}}
+\newcommand\nonterm[1]{\langle\textnormal{#1}\rangle}
+\begin{document}
+\title{The Module Language}
+\author{Zachary Kieda (zkieda@andrew.cmu.edu)}
+\date{\today}
+\maketitle
+\begin{abstract}
+\setlength\parindent{0pt}\noindent 
+
+At some point in time any project gets large enough that the developer[s] decide to design their own language that will aide in accomplishing their various routine or evil goals.\\
+
+Here, we present a language used for own sinister goals -- creating a easier way to construct Java modules, especially with respect to our CrowdSimulation project. In our project, a module belongs in a hierarchical tree rooted at a player. Modules present an easy way to make additions to the player's functionality, as well as provide an easy way to construct a tree of dependent modules for testing. Ultimately, we will use the Module Language (ModLang) to construct and perform tests, as well as run the code for our crowd simulation project.\\
+
+At the present moment, we have the lexer, parser, and dynamic semantics working for ModLang 1.0. We will be working towards ModLang 2.0 to provide additional functionality (like importing modules from other files, and a unification of the type system). \\
+
+\textbf{Keywords.} Programming Languages, Modules
+\end{abstract}
+\pagebreak
+\begin{section}{Module System (Dynamic Semantics)}
+\begin{subsection}{Module Specification}
+We construct modules in a tree-like system, so modules have two parameterized types, $\textsf{Node}$ and $\textsf{Leaf}$. We use this specification to define the dynamic semantics of the language.\\
+
+The signature for the $\textsf{Node}$ module is specified below. \\
+
+\qquad $\begin{array}{l}
+\mbox{signature for }\textsf{T Node} = \\
+\qquad  \begin{array}{lcl}
+\textsf{add} & : & \textsf{T Node} \rightarrow (\textsf{T Node})\; \textsf{Module} \rightarrow T\\
+\textsf{init} & : & \textsf{T Node} \rightarrow ()\\
+\textsf{new} & : & () \rightarrow \textsf{T Node}
+\end{array}
+\end{array}$\\
+
+We define $\textsf{T Module}$ such that $\textsf{T Node }\verb|instanceof|\textsf{ T Module}$ and \\
+$\textsf{T Leaf }\verb|instanceof|\textsf{ T Module}$. This means that the $\textsf{add}$ function accepts
+both $\textsf{Node}$ types and $\textsf{Leaf}$ types. For object-oriented programming languages, we assume that $\textsf{add}$ and $\textsf{init}$ are methods and the current object is the first argument for these functions.\\
+
+The signature for the $\textsf{Leaf}$ module is specified below. \\
+
+\qquad $\begin{array}{l}
+\mbox{signature for }\textsf{T Leaf} = \\
+\qquad  \begin{array}{lcl}
+\textsf{init} & : & \textsf{T Leaf} \rightarrow ()\\
+\textsf{new} & : & () \rightarrow \textsf{T Leaf}
+\end{array}
+\end{array}$\\
+
+\textbf{Signature Contracts}.\medskip\\
+We assert several contracts associated with these signatures that ensure that the modules work correctly. \\
+
+For a module of type \textsf{T Node}, we list the method type, the contract type (requires/ensures), and the contract itself\\
+
+\begin{tabularx}{\linewidth}{l l X}
+$m.\textsf{init}()$ & requires & $\forall m'$ where $m'$ is ancestor of $m$, $m'.\textsf{init}()$ has been called. \\
+& ensures & $\forall m'$ where $m'$ is a descendent of $m$, $m'.\textsf{init}()$ has completed.\\
+$m.\textsf{add}(t)$ & requires & $t\;\texttt{instanceof}\;\textsf{T Module}$\\
+& ensures & $t$ is a child of $m$
+\end{tabularx}\\
+
+A module of type $\textsf{T Leaf}$ has the same requires contract as $\textsf{T Node.init}$. However, the ensures contract only ensures that $\textsf{init}$ method has been called on this leaf.\\
+
+\textbf{Operations.}\medskip\\
+Additional operations can be provided in the system. For example, tree traversals that allow a module to communicate with its children/parent in either DFS or BFS ordering. 
+\end{subsection}
+\begin{subsection}{Java Implementation}
+In our java implementation, the types
+\begin{align*}
+\textsf{T Leaf} &= \texttt{SubModule<T>}\\
+\textsf{T Module} &= \texttt{MultiModule<T>}
+\end{align*}
+The $\textsf{new}$ method is equivalent to a constructor that takes no args. This means that all modules used in our language have a no-arg constructor.\\
+
+We provide a utility annotation \verb|@AutoWired| that allows modules to easily access each other without 
+setup. The annotation \verb|@AutoWired| can only be applied to fields of type \verb|Module|.\\
+
+The code for this annotation is seen below
+\begin{verbatim}
+  @Retention(RUNTIME)
+  @Target(FIELD)
+  public @interface AutoWired {
+    public String value() default "";
+    public boolean noThrow() default true;
+  }
+\end{verbatim}
+
+All fields of type $\tau : Module$ annotated with \verb|@AutoWired| will automatically find a class of type $\tau$ that is connected to this module tree and inject it into the annotated field. These fields are injected during the \emph{linking} phase.\\
+
+If \verb|noThrow| is \verb|false|, we throw a Linking Exception if a module that extends $\tau$ could not be found at runtime. \\
+
+The \verb|value| field allows the user to specify a specific location for the linker to look for an injected class. If $\verb|value| = \verb|""|$, then the linker will search all connected modules, and take the nearest child.\\
+
+When the parameter \verb|value| is non-empty it either defines a relative path or an absolute path to the module we're looking for with respect to the module tree. Java classes in \verb|value| are separated by forward slashes. When \verb|value| begins with a forward slash, it is an absolute path and we search from the root module. Otherwise, we search relative to the current module. We can use \verb|"../"| to access the parent of this module. \\
+
+Here's an example, 
+\begin{verbatim}
+  @AutoWired("../PerceptionModule/FieldOfVisionModule", 
+    noThrow=false) 
+  private FieldOfVisionModule fov;
+\end{verbatim}
+will search the parent module for a \verb|PerceptionModule|, then search that module for a \verb|FieldOfVision| module. If we can't find this module, then we throw a linking exception. Otherwise, the module we found is injected into field $\verb|fov|$.
+
+\end{subsection}
+\end{section}
+\setcounter{section}{0}
+\begin{center}\textbf{\LARGE Module Language 1.0} \end{center}
+
+\begin{section}{Syntax}
+\begin{subsection}{Tokens}
+\textbf{Whitespace and Token Delimiting} 
+
+\medskip Whitespace is either a space, a horizontal tab (\verb|\t|), vertical tab (\verb|\v|), linefeed (\verb|\n|), carriage return (\verb|\r|), or form feed (\verb|\f|) in ASCII encoding. Whitespace is ignored, except that it delimits tokens. Note that whitespace is not a \emph{requirement} to terminate a token. Whitespace can disambiguate two tokens when one of them is present as a prefix in another. The lecture should produce the longest valid token sequence possible.\\
+
+The tokens and lexing is presented below in BNF, 
+\[
+\begin{array}{lcl}
+\IDENT & ::= & \verb|[a-zA-Z$_][a-zA-Z0-9$_]*|\\
+\COLON & ::= & \verb|:|\\
+\DOT & ::= & \verb|.|\\
+\STAR & ::= & \verb|*|\\
+\IMPORT & ::= &\verb|import|\\
+\HAS & ::= & \verb|has|\\
+\END & ::= &\verb|end|
+\end{array}
+\]
+Terminal referenced in the grammar are in \textbf{bold}. \IDENT\;is described using regular expressions.
+\end{subsection}
+\begin{subsection}{Grammar}
+The context free grammar is presented below,
+\[
+\begin{array}{lcl}
+\nonterm{program} & ::= & \nonterm{imports}\;\nonterm{module}\\
+& | & \nonterm{module}\\
+\nonterm{javaRef} & ::= & \IDENT\;\DOT\;\nonterm{javaRef}\\
+& | & \IDENT\\
+\nonterm{module} & ::= & \nonterm{javaRef}\\
+& | & \nonterm{javaRef}\;\COLON\;\HAS\;\nonterm{moduleList}\;\END\\
+& | & \nonterm{javaRef}\;\COLON\;\nonterm{module}\\
+\nonterm{moduleList} & ::= & \nonterm{module}\;\nonterm{moduleList}\\
+& | & \epsilon\\
+\nonterm{moduleImport} & ::= & \IDENT\;\DOT\;\STAR\\
+& | & \IDENT\\
+& | & \IDENT\;\DOT\;\nonterm{moduleImport}\\
+\nonterm{imports} & ::= & \IMPORT\;\nonterm{importList}\;\END\\
+\nonterm{importList} & ::= & \nonterm{moduleImport}\;\nonterm{importList}\\
+& | & \epsilon
+\end{array}
+\]
+
+The parsed AST is returned as a $\nonterm{program}$. The $\nonterm{imports}$ section is used to import existing java modules from the project given by their absolute java path.
+\end{subsection}
+\begin{subsection}{Code Example}
+We present a code example of ModLang that generates a player with the modules \verb|GameModule|, \verb|PerceptionModule|. The \verb|VieldOfVisionModule| is a child of the \verb|PerceptionModule|.
+\begin{verbatim}
+import
+  edu.cmu.cs464.p3.ai.core.*
+  edu.cmu.cs464.p3.ai.perception.*
+end
+
+Player : 
+has
+  GameModule
+  PerceptionModule : FieldOfVisionModule
+end
+\end{verbatim}
+In the first four lines we declare our imports. There is at most one import block, which must be declared before a module. The compiled script should return a single, fully initialized and linked module. It's important 
+to note that this language is just markup and is not turing complete. This language is supposed to easily generate a hierarchy of modules to produce a module that will be used in a turing complete language. 
+\end{subsection}
+\end{section}
+\begin{section}{Elaboration}
+As the name is intended to suggest, \emph{elaboration} is the process of transforming the literal parse tree into to one that is simpler and more well behaved ? the abstract syntax tree. Much of this may be accomplished directly in the semantic actions that accompany the grammar rules.\\
+
+We propose the following inference rules that describe how to elaborate the grammar into the abstract syntax tree.
+\begin{mathpar}
+\inferrule{\;}{\epsilon \leadsto \texttt{[]}} 
+
+\inferrule{\nonterm{imports}\leadsto imp \\ \nonterm{module}\leadsto m}
+  {\nonterm{imports}\;\nonterm{module}\leadsto \textsf{declare}(imp, m)}
+  
+\inferrule{\nonterm{module} \leadsto m\\ \nonterm{moduleList}\leadsto M}
+  {\nonterm{module}\;\nonterm{moduleList}\leadsto m \texttt{::} M} 
+  
+\inferrule{\nonterm{javaRef}\leadsto j\\ \nonterm{module}\leadsto m}
+  {\nonterm{javaRef}\;\COLON\;\nonterm{module}\leadsto\textsf{parent}(\emph{ref}(j), [m])} 
+
+\inferrule{\nonterm{module}\leadsto m \\ \nonterm{moduleList}\leadsto M}
+  {\nonterm{module} \;\COLON\;\HAS\;\nonterm{moduleList}\;\END \leadsto \textsf{parent}(m, M)} 
+
+\end{mathpar}
+\begin{mathpar}
+\inferrule{\nonterm{importList}\leadsto L}
+  {\IMPORT\;\nonterm{importList}\;\END\leadsto L}
+
+\inferrule{\nonterm{moduleImport}\leadsto l\\ \nonterm{importList}\leadsto L}
+  {\nonterm{moduleImport}\;\nonterm{importList}\leadsto l \texttt{::} L}
+\end{mathpar}
+\end{section}
+
+\begin{section}{Static Semantics}
+We write $\Gamma \vdash x : \tau$ to express an expression $x$ is type checked under the context $\Gamma$ which keeps track of all declarations and their types. The following inference rules demonstrate the function of the context
+\[\inferrule{x : \tau \in \Gamma}{\Gamma \vdash x : \tau}\]
+We have several types used for $\tau$. The first is \textsf{JavaPath}, which is an abstract pathname produced by the nonterminal $\nonterm{moduleImport}$ and $\nonterm{javaRef}$. The partial function $ref : \textsf{JavaPath} \rightharpoonup \textsf{Module}$ defines the referenced java module. 
+\end{section}
+
+\begin{center}\vspace*{12pt}\textbf{\LARGE Module Language 2.0} \end{center}
+This is the section where the developer goes completely insane and attempts to make her/his homebrew language as meta as possible. ModLang 2.0 defines a new, unified system of importing and using modules. This system allows the user to import and use files of the ModLang as modules themselves, as well as using java packages as modules. We also formally define and use scope of modules to select submodules. This turns the language into more of a build system but whatever. 
+\setcounter{section}{0}
+\begin{section}{Syntax}
+\begin{subsection}{Code Example}
+\begin{verbatim}
+Player : 
+has
+  import 
+    edu.cmu.cs464.p3.ai.core
+    edu.cmu.cs464.p3.ai.perception
+  in 
+    GameModule
+    PerceptionModule : FieldOfVisionModule
+  end
+end
+
+
+CoreModules = edu.cmu.cs464.p3.ai.core
+core.GameModule 
+\end{verbatim} 
+  
+\end{subsection}
+\end{section}
+\end{document}

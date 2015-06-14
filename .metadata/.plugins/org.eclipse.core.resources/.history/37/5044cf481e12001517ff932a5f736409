@@ -1,0 +1,12 @@
+package edu.cmu.cs464.p3.modulelang.ast
+
+import java.util.{List => JList}
+
+/**
+ * @author zkieda
+ */
+class ParsedModule(baseClass : JavaRef, children : List[ParsedModule]) {
+   private JavaRef baseClass;
+    private List<ParsedModule> children;
+   
+}
