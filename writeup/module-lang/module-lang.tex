@@ -191,7 +191,7 @@ We propose the following tree structure as the abstract syntax tree\\
 \textsf{program}(\emph{imports}, \emph{mod})\\
 %\emph{decl} &::= \emph{mod}\;|\;\textsf{declare}(\emph{import}, \emph{import})\\
 \emph{imports} &::= \texttt{[]}\;|\;\emph{import} :: \emph{imports}\\
-\emph{mod} & ::= \emph{javaRef}\;|\;\textsf{parent}(\emph{javaRef}, \emph{modList})\\
+\emph{mod} & ::= \textsf{parent}(\emph{javaRef}, \emph{modList})\\
 \emph{modList} & ::=\texttt{[]}\;|\;\emph{mod} :: \emph{modList}\\
 \emph{import} & ::= \emph{package}\;\DOT\;\emph{javaRef} \;|\;\emph{package}\;\DOT\;\STAR
 \end{align*}
@@ -208,6 +208,10 @@ We propose the following inference rules that describe how to elaborate the gram
   
 \inferrule{\nonterm{javaRef}\leadsto j\\ \nonterm{module}\leadsto m}
   {\nonterm{javaRef}\;\COLON\;\nonterm{module}\leadsto\textsf{parent}(j, [m])} 
+
+\inferrule{\nonterm{javaRef}\leadsto j}
+  {\nonterm{javaRef}\leadsto\textsf{parent}(j, [\;])} 
+
 
 \inferrule{\nonterm{module}\leadsto m \\ \nonterm{moduleList}\leadsto M}
   {\nonterm{module} \;\COLON\;\HAS\;\nonterm{moduleList}\;\END \leadsto \textsf{parent}(m, M)} 
@@ -266,14 +270,14 @@ Our rules are presented below,
 \inferrule{((\Gamma, \mathcal{C}), (\Gamma', \mathcal{C}')) \in \expr{\emph{package}\;\DOT\;\emph{javaRef}}}
   {\begin{array}{c}
    \mathcal{C} = \mathcal{C}', \\ 
-   (\emph{package}\;\DOT\;\emph{javaRef})\in dom(\texttt{ClassLoader}), \\
-   \tau = \texttt{ClassLoader}(\emph{package}\;\DOT\;\emph{javaRef}),\\
+   (\emph{package}\;\DOT\;\emph{javaRef}, \tau) \in \texttt{ClassLoader}, \\
+%   \tau = \texttt{ClassLoader}(\emph{package}\;\DOT\;\emph{javaRef}),\\
    \tau <: \texttt{Module}, \\ 
    \Gamma' = (\Gamma \setminus \emph{javaRef}) \cup \{(\emph{javaRef}, \tau)\}
    \end{array}}
 \end{mathpar}\\
 
-We introduce a utility function, \emph{isParent}, which will help us define the final two rules. This function validates a possible child module in a context. 
+We introduce a utility function, \emph{isParent}, which will help us define the final rule. This function validates a possible child module in a context. 
 
 \[\begin{array}{l}
 \emph{isParent}\; : \; \textbf{St} \rightarrow\;\emph{javaRef} \rightarrow \emph{bool}\\
@@ -283,11 +287,8 @@ We introduce a utility function, \emph{isParent}, which will help us define the 
 \vee & (\emph{javaRef}, \texttt{SubModule<}\tau\texttt{>}) \in \Gamma \wedge \mathcal{C} <: \tau
 \end{array}
 \end{array}\]
-In other words, we first check that our java reference is in our namespace. Then, we ensure that the declared parent of that java reference is an instance of the allowed super types for the module. The final two rules are outlined below,\\
+In other words, we first check that our java reference is in our namespace. Then, we ensure that the declared parent of that java reference is an instance of the allowed super types for the module. The final rule is outlined below,\\
 \begin{mathpar}
-\inferrule{(\sigma, \sigma') \in \expr{\emph{javaRef}}}
-  {\emph{isParent}\;\sigma\;\emph{javaRef}}
-
 \inferrule{((\Gamma, \mathcal{C}), \sigma') \in \expr{\textsf{parent}(\emph{javaRef}, \emph{modList})}}
   {\emph{isParent}\;(\Gamma, \mathcal{C})\;\emph{javaRef}\\ \exists(\emph{javaRef}, \tau)\in\Gamma.\;\forall m\in\emph{modList}.\;(\Gamma, \tau)\in dom(|m|)}
 \end{mathpar}\\
