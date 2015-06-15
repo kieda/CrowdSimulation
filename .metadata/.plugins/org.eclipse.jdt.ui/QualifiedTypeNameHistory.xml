@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.Ast"/>
+<fullyQualifiedTypeName name="java_cup.runtime.ComplexSymbolFactory"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.Lexer"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.Parser"/>
+<fullyQualifiedTypeName name="java_cup.runtime.Scanner"/>
+<fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+<fullyQualifiedTypeName name="java.io.ByteArrayInputStream"/>
+<fullyQualifiedTypeName name="scala.language"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.ast.ModuleImport"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.ast.ImportToken"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.ast.Star"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.ast.Ident"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.ast.ToString"/>
+<fullyQualifiedTypeName name="java.lang.Error"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.linker.ClassTree"/>
+<fullyQualifiedTypeName name="edu.cmu.cs464.p3.modulelang.linker.Linker"/>
+</qualifiedTypeNameHistroy>

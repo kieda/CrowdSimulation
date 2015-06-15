@@ -17,13 +17,16 @@
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/Group.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/serialize/SerializeGame.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/internal/InternalModule.java</file>
+            <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/SubModule.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/drivers/Main.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/internal/InternalTraits.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/internal/MemoryModule.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/util/SightRangeTable.java</file>
+            <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/Module.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/Game.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/Player.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/perception/FieldOfVisionModule.java</file>
+            <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/MultiModule.java</file>
             <file>file:/Users/zkieda/Documents/CMU/15/464/projects/final/CrowdSimulationBackend/src/edu/cmu/cs464/p3/ai/core/GameModule.java</file>
         </group>
     </open-files>
