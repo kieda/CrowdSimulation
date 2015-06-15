@@ -243,9 +243,9 @@ The partial function $\verb|ClassLoader| : \emph{javaRef} \rightharpoonup \verb|
 We define the initial state of the program. The initial namespace, $\Gamma_i$, is 
 \[(x, \tau) \in \Gamma_i \iff (x, \verb|Class<|\tau\verb|>|) \in \verb|ClassLoader|, \tau <: \verb|Module|\]
 
-When parsing, we also keep track of a \emph{secondary} context, $\mathcal{C} : \textbf{Ty}$, that keeps track of the current module type. This ensures that added submodules will also have a valid type with respect to their parent.\\
+When parsing, we also keep track of a \emph{secondary} context, $\mathcal{C} : \textbf{Ty}_\bot$ where $\textbf{Ty}_\bot = \textbf{Ty}\cup\{\bot\}$. $\mathcal{C}$ keeps track of the current module type. This ensures that added submodules will also have a valid type with respect to their parent. Initially, $\mathcal{C} = \bot$ to indicate there is no current parent.\\
 
-In order to formally define evaluation rules, we define the current state of the evaluation as $\textbf{St} = (\textbf{Ns}, \textbf{Ty})$. For any statement $s$ in our AST, $\expr{e} : \textbf{St} \rightharpoonup \textbf{St}$ is a partial function. We say $(\sigma, \sigma') \in \expr{e}$ if and only if the expression $e$ will terminate with an ending state $\sigma'$ from the starting state $\sigma$.\\
+In order to formally define evaluation rules, we define the current state of the evaluation as $\textbf{St} = (\textbf{Ns}, \textbf{Ty}_\bot)$. For any statement $s$ in our AST, $\expr{e} : \textbf{St} \rightharpoonup \textbf{St}$ is a partial function. We say $(\sigma, \sigma') \in \expr{e}$ if and only if the expression $e$ will terminate with an ending state $\sigma'$ from the starting state $\sigma$.\\
 
 Our rules are presented below,
 \begin{mathpar}
@@ -283,7 +283,7 @@ We introduce a utility function, \emph{isParent}, which will help us define the 
 \emph{isParent}\; : \; \textbf{St} \rightarrow\;\emph{javaRef} \rightarrow \emph{bool}\\
 \emph{isParent} \;\;(\Gamma, \mathcal{C})\;\;\emph{javaRef} \;= \\
 \qquad \begin{array}{rl}
- & (javaRef \in dom(\Gamma) \wedge \mathcal{C} = \epsilon)\\
+ & (javaRef \in dom(\Gamma) \wedge \mathcal{C} = \bot)\\
 \vee & (\emph{javaRef}, \texttt{SubModule<}\tau\texttt{>}) \in \Gamma \wedge \mathcal{C} <: \tau
 \end{array}
 \end{array}\]
