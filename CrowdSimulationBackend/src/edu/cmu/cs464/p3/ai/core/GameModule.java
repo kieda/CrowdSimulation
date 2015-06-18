@@ -9,7 +9,6 @@ public class GameModule extends MultiModule<Player> {
         
     }
     public static class GroupModule extends SubModule<GameModule>{
-        
     }
     public static class ObjectiveModule extends SubModule<GameModule>{
         private PlayerObjective objective;
