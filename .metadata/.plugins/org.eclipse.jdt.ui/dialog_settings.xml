@@ -53,6 +53,8 @@
 	</section>
 	<section name="CallHierarchySearchScope">
 	</section>
+	<section name="RenameInformationPopup">
+	</section>
 	<section name="NewPackageWizardPage">
 		<item value="true" key="create_package_info_java"/>
 	</section>
@@ -64,7 +66,7 @@
 	<section name="completion_proposal_size">
 	</section>
 	<section name="JarPackageWizard">
-		<item value="false" key="JarPackageWizardPage.INCLUDE_DIRECTORY_ENTRIES"/>
+		<item value="true" key="JarPackageWizardPage.INCLUDE_DIRECTORY_ENTRIES"/>
 		<item value="" key="JarManifestWizardPage.MANIFEST_LOCATION"/>
 		<item value="false" key="JarManifestWizardPage.SEAL_JAR"/>
 		<item value="true" key="JarPackageWizardPage.COMPRESS"/>
@@ -83,6 +85,7 @@
 		<item value="false" key="JarManifestWizardPage.SAVE_MANIFEST"/>
 		<item value="false" key="JarPackageWizardPage.EXPORT_OUTPUT_FOLDER"/>
 		<list key="JarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/Users/zkieda/Documents/CMU/15/464/projects/final/ModLang.jar"/>
 			<item value="ModLang/ModLang.jar"/>
 		</list>
 	</section>

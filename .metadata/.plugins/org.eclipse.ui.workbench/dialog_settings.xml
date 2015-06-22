@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item value="531" key="DIALOG_X_ORIGIN"/>
+		<item value="130" key="DIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
 		<item value="657" key="dialogHeight"/>
 		<item value="1050" key="dialogWidth"/>
@@ -15,6 +19,20 @@
 	<section name="NewWizardAction">
 		<item value="org.eclipse.jdt.ui.wizards.NewClassCreationWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+		</list>
+	</section>
+	<section name="org.eclipse.ui.internal.dialogs.WorkbenchEditorsDialog">
+		<item value="0" key="sort"/>
+		<item value="false" key="allPersp"/>
+		<list key="columns">
+			<item value="199"/>
+			<item value="399"/>
+		</list>
+		<list key="bounds">
+			<item value="529"/>
+			<item value="45"/>
+			<item value="622"/>
+			<item value="448"/>
 		</list>
 	</section>
 	<section name="ImportExportAction">

@@ -3,14 +3,25 @@ package edu.cmu.cs464.p3.serialize;
 import edu.cmu.cs464.p3.ai.core.Flag;
 import edu.cmu.cs464.p3.ai.core.Player;
 import edu.cmu.cs464.p3.ai.core.Player.PlayerState;
+import edu.cmu.cs464.p3.util.Tuple;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javax.vecmath.Color3b;
@@ -23,6 +34,8 @@ import javax.vecmath.Vector2d;
  * @author zkieda
  */
 public class SerializeGame {
+    
+    
     private final OutputStreamWriter osr;
     private final AtomicReference currentGameObjectID;
     //onFrameEnd : () -> ()
