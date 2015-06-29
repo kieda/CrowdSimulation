@@ -12,6 +12,13 @@
 \newcommand\HAS{\textbf{has}}
 \newcommand\IMPORT{\textbf{import}}
 \newcommand\END{\textbf{end}}
+\newcommand\LANGLE{\textbf{langle}}
+\newcommand\RANGLE{\textbf{rangle}}
+\newcommand\IN{\textbf{in}}
+\newcommand\OPEN{\textbf{open}}
+\newcommand\EQ{\textbf{equals}}
+\newcommand\FILEPATH{\textbf{filePath}}
+
 \newcommand\nonterm[1]{\langle\textnormal{#1}\rangle}
 \newcommand\expr[1]{|\,#1\;|}
 \begin{document}
@@ -135,6 +142,12 @@ The tokens and lexing is presented below in BNF,
 \IMPORT & ::= &\verb|import|\\
 \HAS & ::= & \verb|has|\\
 \END & ::= &\verb|end|
+\LANGLE & ::= &\verb|<|\\
+\RANGLE & ::= &\verb|>|\\
+\IN & ::= &\verb|in|\\
+\OPEN & ::= &\verb|open|\\
+\EQ & ::= &\verb|=|\\
+\FILEPATH & ::= &\verb"(?:[^/]*)(?:/)?" % fuck it, TODO
 \end{array}
 \]
 Terminal referenced in the grammar are in \textbf{bold}. \IDENT\;is described using regular expressions.
@@ -143,8 +156,20 @@ Terminal referenced in the grammar are in \textbf{bold}. \IDENT\;is described us
 The context free grammar is presented below,
 \[
 \begin{array}{lcl}
-\nonterm{program} & ::= & \nonterm{imports}\;\nonterm{module}\\
-& | & \nonterm{module}\\
+\nonterm{program} & ::= & \IMPORT\;\nonterm{moduleList}\;\IN\;\nonterm{module}\;\END\\
+& | & \nonterm{module}\\ 
+\nonterm{moduleList} & ::=  & \OPEN\;\nonterm{module}\;\nonterm{moduleList}\\
+& | & \nonterm{module}\;\nonterm{moduleList}\\
+& | & \nonterm{import}\;\nonterm{moduleList}\\
+& | & \epsilon\\
+\nonterm{module} & ::= & \nonterm{prefix}\;\COLON\;\HAS\;\nonterm{moduleList}\END\nonterm{spec}\\
+& | & \nonterm{prefix}\;\COLON\;\nonterm{module}\\
+& | & \nonterm{name}\;\EQ\;\nonterm{module}\\
+& | & \nonterm{prefix}\\
+\nonterm{prefix} & ::= & \LANGLE\;\FILEPATH\;\RANGLE\;\nonterm{spec}\\
+& | & \IDENT\;\nonterm{spec}\\
+\nonterm{spec} & ::= & \DOT\;\IDENT\;\nonterm{spec}\;|\;\epsilon
+%% BENEATH here is not figured out at all
 \nonterm{javaRef} & ::= & \IDENT\;\DOT\;\nonterm{javaRef}\\
 & | & \IDENT\\
 \nonterm{module} & ::= & \nonterm{javaRef}\\
