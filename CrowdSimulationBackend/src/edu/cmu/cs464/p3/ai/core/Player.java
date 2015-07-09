@@ -1,10 +1,14 @@
 package edu.cmu.cs464.p3.ai.core;
 
+import edu.cmu.cs464.p3.ai.module.MultiModule;
 import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs464.p3.ai.action.ActionModule;
 import edu.cmu.cs464.p3.ai.internal.InternalModule;
 import edu.cmu.cs464.p3.ai.internal.InternalTraits;
 import edu.cmu.cs464.p3.ai.internal.TokenModule;
+import edu.cmu.cs464.p3.ai.module.AutoModuleLinker;
+import edu.cmu.cs464.p3.ai.module.ConstructModule;
+import edu.cmu.cs464.p3.ai.module.AutoWired;
 import edu.cmu.cs464.p3.ai.perception.FieldOfVisionModule;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 import static edu.cmu.cs464.p3.serialize.SerializeGame.color;
@@ -22,6 +26,18 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector2d;
 
 public class Player extends MultiModule implements Spectator, Entity{
+    private AutoModuleLinker injector = new AutoModuleLinker();
+
+    public InternalTraits getTraits() {
+        return traits;
+    }
+    
+    @Override
+    public void init() {
+        
+    }
+    
+    
     private int hitPoints;
     private int attackPoints;
     private final int agentID;
@@ -29,48 +45,26 @@ public class Player extends MultiModule implements Spectator, Entity{
     private final PlayerState playerState;
     private final InternalTraits traits;
     
-    private final TokenModule tokens;
-    private final ActionModule action;
-    private final PerceptionModule perception;
-    private final InternalModule internal;
+    private @AutoWired FieldOfVisionModule fieldOfVision;
     
     private final PlayerActions playerActions;
     private PlayerObjective objective;
-    
-//    private final QuadTree<GameObject>.QuadTreeImmutable gameSpaceView;
     
     Player(Group g, int agentID, InternalTraits traits){
         this.agentTeam = g.getGroupName();
         this.agentID = agentID;
         this.playerState = new PlayerState();
         this.traits = traits;
-//        this.gameSpaceView = g.getGameSpace();
         
         playerState.isDead.addListener(
             (obj, oldVal, newVal) -> {
                 if(newVal) g.removePlayer(Player.this);
             });
         init((MultiModule)null);
-        initPlayer((Player)this);
+//        initPlayer((Player)this);
         
         this.objective = g.getObjective().makePlayerObjective(this);
-        
-        tokens = new TokenModule();
-        internal = new InternalModule();        
-        action = new ActionModule();
-        perception = new PerceptionModule();
-        
-        addModule(tokens);
-        addModule(perception);
-        addModule(internal);
-        addModule(action);
-        
         this.playerActions = new PlayerActions(this.playerState);
-        
-        action.init(internal, perception, playerActions);
-        internal.init(perception, playerActions::setMoodColor);
-        perception.init(internal);
-        
     }
 
     @Override
@@ -82,14 +76,6 @@ public class Player extends MultiModule implements Spectator, Entity{
         return playerState.getPositionProperty();
     }
 
-    public InternalTraits getTraits() {
-        return traits;
-    }
-
-    public TokenModule getTokenModule() {
-        return tokens;
-    }
-
     @Override
     public ReadOnlyDoubleProperty directionProperty() {
         return playerState.getDirectionProperty();
@@ -97,8 +83,7 @@ public class Player extends MultiModule implements Spectator, Entity{
 
     @Override
     public double getFieldOfVision() {
-        Optional<FieldOfVisionModule> fm = perception.getModuleByClass(FieldOfVisionModule.class);
-        return fm.get().getFieldOfVision();
+        return fieldOfVision.getFieldOfVision();
     }
     
     /**
@@ -189,12 +174,6 @@ public class Player extends MultiModule implements Spectator, Entity{
     public PlayerObjective getObjective(){
         return objective;
     }
-
-//    public QuadTree<GameObject>.QuadTreeImmutable getGameSpace() {
-//        return gameSpaceView;
-//    }
-    
-    
 }
 
 

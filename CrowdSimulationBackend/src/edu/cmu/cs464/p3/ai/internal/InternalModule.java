@@ -1,6 +1,7 @@
 package edu.cmu.cs464.p3.ai.internal;
 
-import edu.cmu.cs464.p3.ai.core.MultiModule;
+import edu.cmu.cs464.p3.ai.module.MultiModule;
+import edu.cmu.cs464.p3.ai.module.AutoWired;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 import java.util.function.Consumer;
 import javax.vecmath.Color3f;
@@ -9,9 +10,9 @@ import javax.vecmath.Color3f;
 public class InternalModule extends MultiModule{
     public static final int NUM_MOODS = 8;
     
-    private EmotionLinearSystem internalState;
-    private PerceptionModule perception;
-    private MoodColorModule moodColor;
+    private @AutoWired EmotionLinearSystem internalState;
+    private @AutoWired PerceptionModule perception;
+    private @AutoWired MoodColorModule moodColor;
     private Consumer<Color3f> changeColorFn;
     
     public EmotionLinearSystem getInternalState() {
@@ -26,16 +27,15 @@ public class InternalModule extends MultiModule{
         changeColorFn.accept(color);
     }
     
-    public void init(PerceptionModule perception, Consumer<Color3f> changeColorFn){
-        this.perception = perception;
+    public void init(Consumer<Color3f> changeColorFn){
         this.changeColorFn = changeColorFn;
         
-        internalState = new EmotionLinearSystem();
-        internalState.addModule(new BasicEmotionGraphConstructor());
-        
-        moodColor = new MoodColorModule();
-        
-        addModule(internalState);
-        addModule(moodColor);
+//        internalState = new EmotionLinearSystem();
+//        internalState.addModule(new BasicEmotionGraphConstructor());
+//        
+//        moodColor = new MoodColorModule();
+//        
+//        addModule(internalState);
+//        addModule(moodColor);
     }
 }

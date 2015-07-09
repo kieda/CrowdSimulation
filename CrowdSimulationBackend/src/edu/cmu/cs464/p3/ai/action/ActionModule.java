@@ -2,9 +2,10 @@ package edu.cmu.cs464.p3.ai.action;
 
 //represents the module that handles all actions
 
-import edu.cmu.cs464.p3.ai.core.MultiModule;
+import edu.cmu.cs464.p3.ai.module.MultiModule;
 import edu.cmu.cs464.p3.ai.core.PlayerActions;
 import edu.cmu.cs464.p3.ai.internal.InternalModule;
+import edu.cmu.cs464.p3.ai.module.AutoWired;
 import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
 
 
@@ -15,18 +16,18 @@ import edu.cmu.cs464.p3.ai.perception.PerceptionModule;
  * tasks.
  */
 public class ActionModule extends MultiModule{
-    private InternalModule internal;
-    private PerceptionModule perception;
-    private PlayerActions playerActions;
+    private @AutoWired InternalModule internal;
+    private @AutoWired PerceptionModule perception;
+    private @AutoWired PlayerActions playerActions;
     
-    public void init(InternalModule internal, PerceptionModule perception, PlayerActions playerActions){
-        this.internal = internal;
-        this.perception = perception;
-        
-        addModule(new AttackModule());
-        addModule(new FaceChangeModule());
-        addModule(new MovementModule());
-    }
+//    public void init(InternalModule internal, PerceptionModule perception, PlayerActions playerActions){
+//        this.internal = internal;
+//        this.perception = perception;
+//        
+//        addModule(new AttackModule());
+//        addModule(new FaceChangeModule());
+//        addModule(new MovementModule());
+//    }
 
     public InternalModule getInternal() {
         return internal;

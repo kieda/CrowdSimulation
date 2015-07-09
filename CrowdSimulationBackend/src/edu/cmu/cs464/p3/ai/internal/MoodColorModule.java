@@ -2,7 +2,7 @@ package edu.cmu.cs464.p3.ai.internal;
 
 //todo make this a module 
 
-import edu.cmu.cs464.p3.ai.core.SubModule;
+import edu.cmu.cs464.p3.ai.module.SubModule;
 import java.util.Arrays;
 import javafx.scene.paint.Color;
 import javax.vecmath.Color3f;

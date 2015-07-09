@@ -101,13 +101,12 @@ The code for this annotation is seen below
   @Target(FIELD)
   public @interface AutoWired {
     public String value() default "";
-    public boolean noThrow() default true;
   }
 \end{verbatim}
 
 All fields of type $\tau : Module$ annotated with \verb|@AutoWired| will automatically find a class of type $\tau$ that is connected to this module tree and inject it into the annotated field. These fields are injected during the \emph{linking} phase.\\
 
-If \verb|noThrow| is \verb|false|, we throw a Linking Exception if a module that extends $\tau$ could not be found at runtime. \\
+During the linking phase, we define a boolean variable \verb|noThrow|. If this variable is \verb|false|, we throw a Linking Exception if a module that extends $\tau$ could not be found at runtime. \\
 
 The \verb|value| field allows the user to specify a specific location for the linker to look for an injected class. If $\verb|value| = \verb|""|$, then the linker will search all connected modules, and take the nearest child.\\
 
@@ -115,22 +114,27 @@ When the parameter \verb|value| is non-empty it either defines a relative path o
 
 Here's an example, 
 \begin{verbatim}
-  @AutoWired("../PerceptionModule/FieldOfVisionModule", 
-    noThrow=false) 
+  @AutoWired("../PerceptionModule/FieldOfVisionModule") 
   private FieldOfVisionModule fov;
 \end{verbatim}
-will search the parent module for a \verb|PerceptionModule|, then search that module for a \verb|FieldOfVision| module. If we can't find this module, then we throw a linking exception. Otherwise, the module we found is injected into field $\verb|fov|$.
+Suppose we link with \verb|noThrow| set to \verb|false|. This code will search the parent module for a \verb|PerceptionModule|, then search that module for a \verb|FieldOfVision| module. If we can't find this module, then we throw a linking exception. Otherwise, the module we found is injected into field $\verb|fov|$.
 
 \end{subsection}
 \end{section}
 \setcounter{section}{0}
-\begin{center}\textbf{\LARGE Module Language 1.0} \end{center}
+\begin{center}\textbf{\LARGE Module Language 2.0} \end{center}
 
 \begin{section}{Syntax}
-\begin{subsection}{Tokens}
+
 \textbf{Whitespace and Token Delimiting} 
 
-\medskip Whitespace is either a space, a horizontal tab (\verb|\t|), vertical tab (\verb|\v|), linefeed (\verb|\n|), carriage return (\verb|\r|), or form feed (\verb|\f|) in ASCII encoding. Whitespace is ignored, except that it delimits tokens. Note that whitespace is not a \emph{requirement} to terminate a token. Whitespace can disambiguate two tokens when one of them is present as a prefix in another. The lecture should produce the longest valid token sequence possible.\\
+\medskip Whitespace is either a space, a horizontal tab (\verb|\t|), vertical tab (\verb|\v|), linefeed (\verb|\n|), carriage return (\verb|\r|), or form feed (\verb|\f|) in ASCII encoding. Whitespace is ignored, except that it delimits tokens. Note that whitespace is not a \emph{requirement} to terminate a token. Whitespace can disambiguate two tokens when one of them is present as a prefix in another. The lexer should produce the longest valid token sequence possible.\\
+
+\textbf{Comments}
+
+\medskip ModLang source programs may contain SML-style comments of the form \verb|(* ... *)| for multi-line comments. Multi-line comments may be nested (and of course the delimiters must be balanced).\\
+
+\begin{subsection}{Tokens}
 
 The tokens and lexing is presented below in BNF, 
 \[
@@ -141,16 +145,16 @@ The tokens and lexing is presented below in BNF,
 \STAR & ::= & \verb|*|\\
 \IMPORT & ::= &\verb|import|\\
 \HAS & ::= & \verb|has|\\
-\END & ::= &\verb|end|
+\END & ::= &\verb|end|\\
 \LANGLE & ::= &\verb|<|\\
 \RANGLE & ::= &\verb|>|\\
 \IN & ::= &\verb|in|\\
 \OPEN & ::= &\verb|open|\\
 \EQ & ::= &\verb|=|\\
-\FILEPATH & ::= &\verb"(?:[^/]*)(?:/)?" % fuck it, TODO
+\FILEPATH & ::= &\verb"(?:[^/]*/)*?([^/.]*)(?:\\..*)"
 \end{array}
 \]
-Terminal referenced in the grammar are in \textbf{bold}. \IDENT\;is described using regular expressions.
+Terminal referenced in the grammar are in \textbf{bold}. \IDENT\;is described using regular expressions.\\
 \end{subsection}
 \begin{subsection}{Grammar}
 The context free grammar is presented below,
@@ -160,88 +164,98 @@ The context free grammar is presented below,
 & | & \nonterm{module}\\ 
 \nonterm{moduleList} & ::=  & \OPEN\;\nonterm{module}\;\nonterm{moduleList}\\
 & | & \nonterm{module}\;\nonterm{moduleList}\\
-& | & \nonterm{import}\;\nonterm{moduleList}\\
+& | & \IMPORT\;\nonterm{moduleList}\;\IN\;\nonterm{moduleList}\;\END\;\nonterm{moduleList}\\
 & | & \epsilon\\
-\nonterm{module} & ::= & \nonterm{prefix}\;\COLON\;\HAS\;\nonterm{moduleList}\END\nonterm{spec}\\
+\nonterm{module} & ::= & \nonterm{prefix}\;\COLON\;\HAS\;\nonterm{moduleList}\;\END\;\nonterm{spec}\\
 & | & \nonterm{prefix}\;\COLON\;\nonterm{module}\\
-& | & \nonterm{name}\;\EQ\;\nonterm{module}\\
+& | & \nonterm{lvalue}\;\EQ\;\nonterm{module}\\
 & | & \nonterm{prefix}\\
+\nonterm{lvalue} & ::= & \LANGLE\;\FILEPATH\;\RANGLE\;\DOT\;\IDENT\;\nonterm{spec}\\
+& | & \IDENT\;\nonterm{spec}\\
 \nonterm{prefix} & ::= & \LANGLE\;\FILEPATH\;\RANGLE\;\nonterm{spec}\\
 & | & \IDENT\;\nonterm{spec}\\
 \nonterm{spec} & ::= & \DOT\;\IDENT\;\nonterm{spec}\;|\;\epsilon
-%% BENEATH here is not figured out at all
-\nonterm{javaRef} & ::= & \IDENT\;\DOT\;\nonterm{javaRef}\\
-& | & \IDENT\\
-\nonterm{module} & ::= & \nonterm{javaRef}\\
-& | & \nonterm{javaRef}\;\COLON\;\HAS\;\nonterm{moduleList}\;\END\\
-& | & \nonterm{javaRef}\;\COLON\;\nonterm{module}\\
-\nonterm{moduleList} & ::= & \nonterm{module}\;\nonterm{moduleList}\\
-& | & \epsilon\\
-\nonterm{moduleImport} & ::= & \IDENT\;\DOT\;\STAR\\
-& | & \IDENT\\
-& | & \IDENT\;\DOT\;\nonterm{moduleImport}\\
-\nonterm{imports} & ::= & \IMPORT\;\nonterm{importList}\;\END\\
-\nonterm{importList} & ::= & \nonterm{moduleImport}\;\nonterm{importList}\\
-& | & \epsilon
 \end{array}
 \]
 
-The parsed AST is returned as a $\nonterm{program}$. The $\nonterm{imports}$ section is used to import existing java modules from the project given by their absolute java path.
+The parsed AST is returned as a $\nonterm{program}$. The $\nonterm{imports}$ section is used to import or define  modules from the project into the current context without adding them to the current module.
 \end{subsection}
 \begin{subsection}{Code Example}
 We present a code example of ModLang that generates a player with the modules \verb|GameModule|, \verb|PerceptionModule|. The \verb|VieldOfVisionModule| is a child of the \verb|PerceptionModule|.
 \begin{verbatim}
-import
-  edu.cmu.cs464.p3.ai.core.*
-  edu.cmu.cs464.p3.ai.perception.*
-end
-
-Player : 
-has
-  GameModule
-  PerceptionModule : FieldOfVisionModule
+import open edu.cmu.cs464.p3.ai.core
+       open edu.cmu.cs464.p3.ai.perception
+in 
+   Player : 
+   has GameModule
+       PerceptionModule : FieldOfVisionModule
+   end
 end
 \end{verbatim}
-In the first four lines we declare our imports. There is at most one import block, which must be declared before a module. The compiled script should return a single, fully initialized and linked module. It's important 
-to note that this language is just markup and is not turing complete. This language is supposed to easily generate a hierarchy of modules to produce a module that will be used in a turing complete language. 
+In the first and second lines we declare our imports. The compiled script should return a single, fully initialized and linked module. It's important to note that this language is just markup and is not turing complete. This language is supposed to easily generate a hierarchy of modules to produce a module that will be used in a turing complete language. 
 \end{subsection}
 \end{section}
 \begin{section}{Elaboration}
 As the name is intended to suggest, \emph{elaboration} is the process of transforming the literal parse tree into to one that is simpler and more well behaved -- the abstract syntax tree. Much of this may be accomplished directly in the semantic actions that accompany the grammar rules.\\
 
 We propose the following tree structure as the abstract syntax tree\\
-\begin{align*}
-\emph{prog} &::= 
-%\emph{decl}\; |\;
-\textsf{program}(\emph{imports}, \emph{mod})\\
-%\emph{decl} &::= \emph{mod}\;|\;\textsf{declare}(\emph{import}, \emph{import})\\
-\emph{imports} &::= \texttt{[]}\;|\;\emph{import} :: \emph{imports}\\
-\emph{mod} & ::= \emph{javaRef}\;|\;\textsf{parent}(\emph{javaRef}, \emph{modList})\\
-\emph{modList} & ::=\texttt{[]}\;|\;\emph{mod} :: \emph{modList}
-\end{align*}
+\[\begin{array}{rcl}
+\emph{mod} & ::= & \textsf{file}(\FILEPATH)\;|\; \textsf{parent}(mod, modList)\\
+& | & \textsf{scope}(mod, \IDENT)\; |\; \IDENT\\
+& | & \textsf{decl}(mod, mod)\\
+\emph{modList} & ::= &\texttt{[]}\;|\;\emph{mod} :: \emph{modList}\\
+& | & \textsf{context}(modList, modList)::modList\\
+& | & \textsf{open}(mod)::modList
+\end{array}\]
+The $\textsf{decl}$ structure is used to declare a name in a given scope. The left hand argument refers to the module that will be bound to a name, and the right hand side refers to a scope and name that the left hand argument will be bound to. Note that a $\textsf{decl}$ will only have the structure $\textsf{decl}(\emph{mod}, \IDENT)$ or $\textsf{decl}(\emph{mod}, \textsf{scope}(\emph{mod}, \IDENT))$ due to the structure of $\nonterm{lvalue}$. \\ 
 
 We propose the following inference rules that describe how to elaborate the grammar into the abstract syntax tree.
 \begin{mathpar}
 \inferrule{\;}{\epsilon \leadsto \texttt{[]}} 
 
-\inferrule{\nonterm{imports}\leadsto imp \\ \nonterm{module}\leadsto m}
-  {\nonterm{imports}\;\nonterm{module}\leadsto \textsf{program}(imp, m)}
-  
-\inferrule{\nonterm{module} \leadsto m\\ \nonterm{moduleList}\leadsto M}
-  {\nonterm{module}\;\nonterm{moduleList}\leadsto m \texttt{::} M} 
-  
-\inferrule{\nonterm{javaRef}\leadsto j\\ \nonterm{module}\leadsto m}
-  {\nonterm{javaRef}\;\COLON\;\nonterm{module}\leadsto\textsf{parent}(j, [m])} 
-
 \inferrule{\nonterm{module}\leadsto m \\ \nonterm{moduleList}\leadsto M}
-  {\nonterm{module} \;\COLON\;\HAS\;\nonterm{moduleList}\;\END \leadsto \textsf{parent}(m, M)} 
+  {\begin{array}{c}
+    \OPEN\;\nonterm{module}\;\nonterm{moduleList}\leadsto \textsf{open}(m)\texttt{::}M, \\ 
+    \nonterm{module}\;\nonterm{moduleList}\leadsto m\texttt{::}M
+   \end{array}}
+   
+\inferrule{\nonterm{moduleList} \leadsto M_1\\ \nonterm{moduleList}\leadsto M_2 \\ \nonterm{moduleList}\leadsto M_3}
+  {\IMPORT\;\nonterm{moduleList}\;\IN\;\nonterm{moduleList}\;\END\;\nonterm{moduleList} \leadsto \textsf{context}(M_1, M_2)\texttt{::}M_3}
+  
+\inferrule{\nonterm{prefix}\leadsto p\\\nonterm{modList}\leadsto M}
+  {\nonterm{prefix}\;\COLON\;\HAS \;\nonterm{modList}\;\END\;\epsilon\leadsto \textsf{parent}(p, M)}
 
-\inferrule{\nonterm{importList}\leadsto L}
-  {\IMPORT\;\nonterm{importList}\;\END\leadsto L}
+\inferrule{\nonterm{prefix}\;\COLON\;\HAS\;\nonterm{modList}\;\END\nonterm{spec} \leadsto M \\ \IDENT \leadsto id}
+  {\nonterm{prefix}\;\COLON\;\HAS\;\nonterm{modList}\;\END\;\nonterm{spec}\;\DOT\;\IDENT \leadsto \textsf{scope}(M, id)}
+  
+\inferrule{\nonterm{prefix}\leadsto p\\\nonterm{module}\leadsto m}
+  {\nonterm{prefix}\;\COLON\;\nonterm{module}\leadsto\textsf{parent}(p, \texttt{[}m\texttt{]})}
 
-\inferrule{\nonterm{moduleImport}\leadsto l\\ \nonterm{importList}\leadsto L}
-  {\nonterm{moduleImport}\;\nonterm{importList}\leadsto l \texttt{::} L}
+\inferrule{\nonterm{lvalue} \leadsto l\\\nonterm{module}\leadsto m}
+  {\nonterm{lvalue}\;\EQ\;\nonterm{module} \leadsto\textsf{decl}(l, m)}
+  
+\inferrule{\FILEPATH\leadsto f}
+  {\LANGLE\;\FILEPATH\;\RANGLE\;\epsilon \leadsto \textsf{file}(f)}
+
+\inferrule{\LANGLE\;\FILEPATH\;\RANGLE\;\nonterm{spec}\leadsto M\\\IDENT\leadsto id}
+  {\LANGLE\;\FILEPATH\;\RANGLE\;\nonterm{spec}\;\DOT\;\IDENT \leadsto \textsf{scope}(M, id)}  
 \end{mathpar}
+
+Here's an example translation from code to AST,
+
+\begin{verbatim}
+(* example syntax *)
+<hello/World.mod>.asdf.g = <hello/Player.mod>:has
+ open modules.player
+end
+\end{verbatim}
+And here's the resulting AST from using the inference rules,
+\begin{verbatim}
+decl(scope(scope(file("hello/World.mod"), "asdf"), "g"), 
+  parent(file("hello/Player.mod"), 
+    [open(scope("modules", "player"))]))
+\end{verbatim}
+
 \end{section}
 %To further express the import declaration semantics, we perform a different stage of elaboration using the function \emph{evalProg}, 
 %\[\emph{evalProg}\;\textsf{program}(L, \emph{mod}) = 
@@ -252,6 +266,17 @@ We propose the following inference rules that describe how to elaborate the gram
 %\]
 %This generates a hierarchy of tree-like 
 \begin{section}{Static Semantics}
+\begin{quote}
+This is the section where the developer goes completely insane and makes her/his homebrew language as meta as possible. We define unified system of importing and using modules. This system allows the user to import and use ModLang files and java packages as as modules. We also formally define and use scope of modules to select submodules. This turns the language into more of a build system but whatever.
+\end{quote}
+\begin{subsection}{File Imports}
+Notice that any module program is represented by a single module. This allows a ModLang file to represent a module directly, much like how a java file must can only represent a single public java class. \\
+
+The first capture group of a $\FILEPATH$ represents the name an imported module is bound to. This capture group retrieves the file name without the file's extension. Thus, a file $f$ with file name $n : \IDENT$ is represented in the AST as $(n, f) : mod$.\\
+
+We permit escape sequences in a $\FILEPATH$ to represent whitespace and other characters that may be represented. We permit all java escape sequences, along with a few more. We add in the $\verb|\s|$ escape sequence to represent a space, and the $\verb|\>|$ escape sequence to represent a $\verb|>|$ character. Actual whitespace in a $\FILEPATH$ can be used to delimit tokens and is ignored. A token in a $\FILEPATH$ is a file separator $(\verb|/|)$, or a sequence of non-whitespace tokens as a file name $(\IDENT)$.\\
+\end{subsection}
+
 In order to express the static semantics of this language, we use a unholy mashup of denotational semantics notation and classic static semantics notation.\\ 
 
 Since we're dealing with classes in java, a type might have many super types because of inheritance. We write $\tau <: \tau'$ when the class $\tau$ is a subtype of, or extends the class $\tau'$. We define the type \textbf{Ty} to describe java classes, such that $\tau \in \textbf{Ty}$ if and only if $\tau <: \verb|Module|$.\\
@@ -283,29 +308,51 @@ In order to formally define evaluation rules, we define the current state of the
 Notice that in our evaluation rules, we allow imports to shadow previously defined imports.\\
 
 \end{section}
-
-\begin{center}\vspace*{12pt}\textbf{\LARGE Module Language 2.0} \end{center}
-This is the section where the developer goes completely insane and attempts to make her/his homebrew language as meta as possible. ModLang 2.0 defines a new, unified system of importing and using modules. This system allows the user to import and use files of the ModLang as modules themselves, as well as using java packages as modules. We also formally define and use scope of modules to select submodules. This turns the language into more of a build system but whatever. 
-\setcounter{section}{0}
-\begin{section}{Syntax}
-\begin{subsection}{Code Example}
+\begin{section}{Design Patterns}
+Because of the unification of the module system, many possible design patterns become possible. A few are listed below
+\begin{subsection}{Override a Module}
 \begin{verbatim}
-Player : 
+<modules/Player.module> : 
 has
-  import 
-    edu.cmu.cs464.p3.ai.core
-    edu.cmu.cs464.p3.ai.perception
-  in 
-    GameModule
-    PerceptionModule : FieldOfVisionModule
+  PerceptionModule.FieldOfVision 
+    = <modules/AlternativeFov.module>
+end
+\end{verbatim}
+Here, we bind the submodule name \verb|FieldOfVision| in the module\\ \verb|Player.PerceptionModule| to the module defined by the file \\\verb|modules/AlternativeFov.module|. This will use the \verb|AlternateFov| in place of any existing module named \verb|FieldOfVision|. Note that due to our dynamic semanics, the module \verb|FieldOfVision| is never instantiated or added to the resulting module.
+\end{subsection}
+\begin{subsection}{Aggregation}
+Suppose we have some aggregation module \verb|Agg| that take modules of a certain type, and returns an aggregate of all of its submodules. If we have a package that defines a series of modules that \verb|Agg| can aggregate, we could build the aggregator as follows,
+\begin{verbatim}
+import
+  (* com.company has the Agg 
+     class as well as a package
+     util.aggregators *)
+  com.company
+in 
+  Agg:
+  has
+  	open util.aggregators
   end
 end
-
-
-CoreModules = edu.cmu.cs464.p3.ai.core
-core.GameModule 
-\end{verbatim} 
-  
+\end{verbatim}
 \end{subsection}
-\end{section}
+\begin{subsection}{Union}
+One can union multiple modules together into a single module. 
+\begin{verbatim}
+import
+  <modules/Player.module>
+  <modules/PlayerModifications0.module>
+  <modules/PlayerModifications1.module>
+in
+  Player :
+  has
+  	open PlayerModifications0
+	open PlayerModifications1
+  end
+end
+\end{verbatim}
+In this case, the names in \verb|PlayerModifications0| and \verb|PlayerModifications1| will shadow names defined in \verb|Player|. Similarly, the names in \verb|PlayerModifications1| will shadow names in \verb|PlayerModifications0| if there are name conflicts.
+\end{subsection}
+\end{section} 
+
 \end{document}

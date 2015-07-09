@@ -1,0 +1,17 @@
+grammar edu.cmu.cs464.p3.modlang.ModLang with org.eclipse.xtext.common.Terminals
+
+generate modLang "http://www.cmu.edu/cs464/p3/modlang/ModLang"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
+Module:
+	
+;
+ModuleList:
+	  'open' Module 
+	| Module
+	| 'import' (ModuleList) 'in' (ModuleList) 'end'
+;

@@ -1,10 +1,10 @@
 package edu.cmu.cs464.p3.ai.internal;
 
 import com.google.common.math.DoubleMath;
-import edu.cmu.cs464.p3.ai.core.MultiModule;
+import edu.cmu.cs464.p3.ai.module.MultiModule;
 import static edu.cmu.cs464.p3.util.MatrixUtil.fill;
 import static edu.cmu.cs464.p3.ai.internal.InternalModule.NUM_MOODS;
-import edu.cmu.cs464.p3.ai.core.SubModule;
+import edu.cmu.cs464.p3.ai.module.SubModule;
 import edu.cmu.cs464.p3.util.LinearProgram;
 import edu.cmu.cs464.p3.util.MatrixUtil;
 import org.jgrapht.Graph;
@@ -13,6 +13,8 @@ import org.ejml.simple.SimpleMatrix;
 import edu.cmu.cs464.p3.util.Tuple;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  * this is the linear system built from the graph [see section 5].
  * Every agent has this linear system. We update this system every timestep, 
@@ -175,5 +177,14 @@ public class EmotionLinearSystem extends MultiModule<InternalModule> {
             newEmotion = getEmotion();
         }
         //todo set new emotional state.
+    }
+}
+class Test{
+    public static void main(String[] args) {
+        Pattern p = Pattern.compile("(?:[^/]*/)*?([^/.]*)(?:\\..*)");
+        Matcher m = p.matcher("hello/world/asdf.co.m");
+        System.out.println(m.matches());
+        System.out.println(m.group());
+        System.out.println(m.group(1));
     }
 }

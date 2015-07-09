@@ -1,6 +1,8 @@
 package edu.cmu.cs464.p3.ai.internal;
 
-import edu.cmu.cs464.p3.ai.core.SubModule;
+import edu.cmu.cs464.p3.ai.core.Player;
+import edu.cmu.cs464.p3.ai.module.AutoWired;
+import edu.cmu.cs464.p3.ai.module.SubModule;
 import edu.cmu.cs464.p3.ai.perception.FRCPLevel;
 import java.util.Arrays;
 import org.ejml.simple.SimpleMatrix;
@@ -9,6 +11,7 @@ import org.ejml.simple.SimpleMatrix;
  * @author zkieda
  */
 public class TokenModule extends SubModule {
+    private @AutoWired Player player;
     public static final int 
         COMMUNICATION = 0,
         CONFIDENCE = 1,
@@ -41,7 +44,7 @@ public class TokenModule extends SubModule {
         tokenCap = new int[5];
         
         //find and set the tokenCap
-        tokenCap = fromVector(translationMat.mult(getPlayer().getTraits().getVector()));
+        tokenCap = fromVector(translationMat.mult(player.getTraits().getVector()));
     }
     
     @Override

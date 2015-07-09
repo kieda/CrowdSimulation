@@ -7,7 +7,7 @@ import java.util.Map;
  * @author zkieda
  */
 public class Properties {
-    private Map<String, Object> properties = new HashMap<>();
+    private final Map<String, Object> properties = new HashMap<>();
     
     public Properties() {}
     

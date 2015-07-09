@@ -1,4 +1,0 @@
-# example properties using javafx
-moduleClass=
-multiModuleClass=javafx.scene.Parent
-addMethod=getChildren().add

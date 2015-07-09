@@ -11275,3 +11275,65 @@ scala.reflect.internal.MissingRequirementError: class java.lang.Class<> in compi
 	at scala.util.control.Breaks.breakable(Breaks.scala:38)
 	at scala.tools.nsc.interactive.Global.pollForWork(Global.scala:429)
 	at scala.tools.nsc.interactive.PresentationCompilerThread.run(PresentationCompilerThread.scala:22)
+!SESSION 2015-06-22 13:40:09.913 -----------------------------------------------
+eclipse.buildId=4.1.0-vfinal-20150525-1102-Typesafe
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/zkieda/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/zkieda/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-06-22 13:40:22.749
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+!SESSION 2015-07-04 16:00:12.263 -----------------------------------------------
+eclipse.buildId=4.1.0-vfinal-20150525-1102-Typesafe
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/zkieda/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/zkieda/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-07-04 16:00:24.334
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+!SESSION 2015-07-04 16:12:16.651 -----------------------------------------------
+eclipse.buildId=4.1.0-vfinal-20150525-1102-Typesafe
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/zkieda/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/zkieda/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-07-04 16:12:28.287
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.debug.ui 4 0 2015-07-04 16:17:53.249
+!MESSAGE Tab group extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup for type org.eclipse.emf.mwe2.launch.Mwe2LaunchConfigurationType for the [debug] mode has been replaced by extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup
+
+!ENTRY org.eclipse.debug.ui 4 0 2015-07-04 16:17:53.250
+!MESSAGE Tab group extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup for type org.eclipse.emf.mwe2.launch.Mwe2LaunchConfigurationType for the [run] mode has been replaced by extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup
+!SESSION 2015-07-04 17:32:53.885 -----------------------------------------------
+eclipse.buildId=4.1.0-vfinal-20150525-1102-Typesafe
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/zkieda/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/zkieda/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-07-04 17:33:26.658
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+!SESSION 2015-07-05 13:12:36.172 -----------------------------------------------
+eclipse.buildId=4.1.0-vfinal-20150525-1102-Typesafe
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/zkieda/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/zkieda/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-07-05 13:12:48.205
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.debug.ui 4 0 2015-07-05 13:27:54.431
+!MESSAGE Tab group extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup for type org.eclipse.emf.mwe2.launch.Mwe2LaunchConfigurationType for the [debug] mode has been replaced by extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup
+
+!ENTRY org.eclipse.debug.ui 4 0 2015-07-05 13:27:54.432
+!MESSAGE Tab group extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup for type org.eclipse.emf.mwe2.launch.Mwe2LaunchConfigurationType for the [run] mode has been replaced by extension: org.eclipse.emf.mwe2.launch.ui.Mwe2LaunchConfigurationTabGroup

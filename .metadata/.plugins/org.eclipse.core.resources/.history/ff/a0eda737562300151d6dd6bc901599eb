@@ -1,0 +1,22 @@
+grammar edu.cmu.cs464.p3.modlang.ModLang with org.eclipse.xtext.common.Terminals
+
+generate modLang "http://www.cmu.edu/cs464/p3/modlang/ModLang"
+
+Model:
+	modules+=ModuleList*;
+Prefix:
+	  '<' '>' spec=Spec
+	| ID Spec
+;
+
+Spec: {Spec}
+	(path+='.' ID)*
+;
+Module:
+	Prefix;
+	
+ModuleList: {ModuleList}
+	  'open' open=Module 
+	| single=Module
+	| 'import' context+=ModuleList* 'in' def+=ModuleList* 'end'
+;

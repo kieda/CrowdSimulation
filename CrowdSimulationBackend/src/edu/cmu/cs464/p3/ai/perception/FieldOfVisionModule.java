@@ -1,7 +1,7 @@
 package edu.cmu.cs464.p3.ai.perception;
 
 import edu.cmu.cs464.p3.ai.core.GameObject;
-import edu.cmu.cs464.p3.ai.core.SubModule;
+import edu.cmu.cs464.p3.ai.module.SubModule;
 import edu.cmu.cs464.p3.util.quadtree.QuadTree;
 
 /**

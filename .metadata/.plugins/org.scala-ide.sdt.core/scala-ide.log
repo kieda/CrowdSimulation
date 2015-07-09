@@ -17563,3 +17563,93 @@ scala.reflect.internal.MissingRequirementError: class java.lang.Class<> in compi
 2015-06-21 21:06:27,632  WARN [Worker-128] - ScalaProject - Project ModLang runs on platform default installation.
 2015-06-21 21:06:27,640  WARN [Worker-128] - ScalaProject - Project ModLang has platform default sourceLevel.
 2015-06-21 21:06:27,640  WARN [Worker-128] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:40:30,786  WARN [main] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:40:30,787  WARN [main] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:40:33,541  WARN [org.eclipse.jdt.internal.ui.text.JavaReconciler] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:40:33,563  WARN [org.eclipse.jdt.internal.ui.text.JavaReconciler] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:20,722  WARN [Worker-0] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:20,723  WARN [Worker-0] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:20,827  WARN [Worker-0] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:20,827  WARN [Worker-0] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:21,187  WARN [Worker-0] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:21,187  WARN [Worker-0] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:22,082  WARN [Worker-0] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:22,082  WARN [Worker-0] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:23,224  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:23,224  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:23,243  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:23,243  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:23,272  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:23,273  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:27,543  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:27,543  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:27,560  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:27,560  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:31,042  WARN [Worker-3] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:31,043  WARN [Worker-3] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:31,056  WARN [Worker-3] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:31,056  WARN [Worker-3] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:31,076  WARN [Worker-3] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:31,076  WARN [Worker-3] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:42,865  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:42,865  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:42,886  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:42,886  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:43,016  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:43,016  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:44,589  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:44,589  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:44,601  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:44,602  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:44,742  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:44,742  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:47,055  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:47,056  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:47,068  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:47,068  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:41:47,085  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:41:47,086  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:18,731  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:18,731  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:18,746  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:18,746  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:18,787  WARN [Worker-5] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:18,788  WARN [Worker-5] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:19,819  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:19,819  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:19,846  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:19,854  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 13:42:19,908  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 13:42:19,908  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-06-22 14:15:43,343  WARN [main] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-06-22 14:15:43,344  WARN [main] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 16:00:32,091  WARN [main] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 16:00:32,093  WARN [main] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 16:00:34,913  WARN [org.eclipse.jdt.internal.ui.text.JavaReconciler] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 16:00:34,919  WARN [org.eclipse.jdt.internal.ui.text.JavaReconciler] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 16:18:02,435 ERROR [Worker-0] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2015-07-04 16:18:02,436 ERROR [Worker-0] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2015-07-04 16:18:02,436 ERROR [Worker-0] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2015-07-04 17:34:19,912  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:19,914  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:20,942  WARN [Worker-1] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:20,942  WARN [Worker-1] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:22,889  WARN [Worker-2] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:22,891  WARN [Worker-2] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:23,167  WARN [Worker-2] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:23,167  WARN [Worker-2] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:23,645  WARN [Worker-2] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:23,645  WARN [Worker-2] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:26,919  WARN [Java indexing] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:26,919  WARN [Java indexing] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:48,690  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:48,691  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:48,715  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:48,716  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-04 17:34:48,750  WARN [Worker-4] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-04 17:34:48,751  WARN [Worker-4] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-05 13:12:57,521  WARN [Worker-0] - ScalaProject - Project ModLang has platform default sourceLevel.
+2015-07-05 13:12:57,527  WARN [Worker-0] - ScalaProject - Project ModLang runs on platform default installation.
+2015-07-05 13:27:54,634 ERROR [Worker-7] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2015-07-05 13:27:54,635 ERROR [Worker-7] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2015-07-05 13:27:54,635 ERROR [Worker-7] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
