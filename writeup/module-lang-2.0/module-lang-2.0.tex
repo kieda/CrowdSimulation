@@ -168,7 +168,7 @@ The context free grammar is presented below,
 & | & \epsilon\\
 \nonterm{module} & ::= & \nonterm{prefix}\;\COLON\;\HAS\;\nonterm{moduleList}\;\END\;\nonterm{spec}\\
 & | & \nonterm{prefix}\;\COLON\;\nonterm{module}\\
-& | & \nonterm{lvalue}\;\EQ\;\nonterm{module}\\
+& | & \IDENT\;\EQ\;\nonterm{module}\\
 & | & \nonterm{prefix}\\
 \nonterm{lvalue} & ::= & \LANGLE\;\FILEPATH\;\RANGLE\;\DOT\;\IDENT\;\nonterm{spec}\\
 & | & \IDENT\;\nonterm{spec}\\
@@ -202,7 +202,7 @@ We propose the following tree structure as the abstract syntax tree\\
 \[\begin{array}{rcl}
 \emph{mod} & ::= & \textsf{file}(\FILEPATH)\;|\; \textsf{parent}(mod, modList)\\
 & | & \textsf{scope}(mod, \IDENT)\; |\; \IDENT\\
-& | & \textsf{decl}(mod, mod)\\
+& | & \textsf{decl}(\IDENT, mod)\\
 \emph{modList} & ::= &\texttt{[]}\;|\;\emph{mod} :: \emph{modList}\\
 & | & \textsf{context}(modList, modList)::modList\\
 & | & \textsf{open}(mod)::modList
@@ -231,8 +231,8 @@ We propose the following inference rules that describe how to elaborate the gram
 \inferrule{\nonterm{prefix}\leadsto p\\\nonterm{module}\leadsto m}
   {\nonterm{prefix}\;\COLON\;\nonterm{module}\leadsto\textsf{parent}(p, \texttt{[}m\texttt{]})}
 
-\inferrule{\nonterm{lvalue} \leadsto l\\\nonterm{module}\leadsto m}
-  {\nonterm{lvalue}\;\EQ\;\nonterm{module} \leadsto\textsf{decl}(l, m)}
+\inferrule{\IDENT \leadsto id\\\nonterm{module}\leadsto m}
+  {\IDENT\;\EQ\;\nonterm{module} \leadsto\textsf{decl}(id, m)}
   
 \inferrule{\FILEPATH\leadsto f}
   {\LANGLE\;\FILEPATH\;\RANGLE\;\epsilon \leadsto \textsf{file}(f)}
@@ -245,13 +245,13 @@ Here's an example translation from code to AST,
 
 \begin{verbatim}
 (* example syntax *)
-<hello/World.mod>.asdf.g = <hello/Player.mod>:has
+<hello/World.mod>.asdf:g = <hello/Player.mod>:has
  open modules.player
 end
 \end{verbatim}
 And here's the resulting AST from using the inference rules,
 \begin{verbatim}
-decl(scope(scope(file("hello/World.mod"), "asdf"), "g"), 
+scope(file("hello/World.mod"), "asdf"),  
   parent(file("hello/Player.mod"), 
     [open(scope("modules", "player"))]))
 \end{verbatim}
