@@ -1,0 +1,50 @@
+\documentclass[11pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\setlength\parindent{0pt}
+\begin{document}
+\title{{Emotion-Based Crowd Simulation}\\
+{Project Goals}}
+\author{Zachary Kieda (zkieda@andrew.cmu.edu)}
+\date{\today}
+\maketitle
+
+\textbf{Overview}\\
+In the first section we will focus on high level examples of different behavior that we would like to observe that we could set up an experiment to test. In the following sections we will define a list of lower level tests that will define the behavior of the specific subsystems of our agents. The latter sections will provide a bases for picking parameters and coefficients, such that we may tweak them manually till all conditions are amply satisfied. Then, the higher level functionality should be emergent from the lower level tests.\\
+
+We find parameters of heuristics through low level benchmarks since we have many heuristics and many parameters for each. For our simulation, the only way that we can test the high level functionality of our agents is to have an external viewer determine the emotional reasons behind the actions. It's very tough to manage many low level parameters from vastly different heuristics using only a high level method of testing.\\
+
+We perform "zombie" tests at the lower level. A zombie test is where we direct the movement and actions of a couple of agents with no emotional state, and have one "real" agent that has the emotional state. The real agent is our control group that we watch, and we test for individual changes in the lower level heuristics. We can also use this to test the movement and the actions selected by a non-zombie agent.\\
+
+\textbf{Terminology}: We use specific terminology to quickly define agents. An agent that does not move is called an observer, while an agent that moves is called an actor. Observers and actors are both non-zombies. We prefix each agent on the field with their team colors (e.g. red zombie, blue observer, red actor, etc).
+
+\begin{section}{High Level Tests}
+\begin{itemize}
+\item A smaller team with confident individuals should be able to win against a larger team with unconfident agents.
+\item If an agent sees a teammate die in the simulation, the observing agent should appear to become aggressive towards the attacker, or more passive and sad.
+\item Suppose we have two red actors and one blue actor. All of the actors are initially unconfident. The red actors should gain confidence due to their advantage in numbers, while the blue actor should appear more passive or frightened.
+\end{itemize}
+\end{section}
+
+\begin{section}{Perception}
+\textbf{Behavior} Continuity of perception through the tracking of objects\\
+
+\textbf{Implementation} We will do this in two manners. First, we will weight the interest of an object based on our previous interest in it. If we were interested in the object previously, the object gets a higher weight. This allows us to create a form of tracking. Second, we will store a ``short-term memory" for each agent, which includes information that was important over the last several timesteps. We will store high-level details -- for example the fear or comfort of an area. When we see this change over time, we can make judgements about the situation. \\
+
+\textbf{Tests}
+\begin{itemize}
+\item We have two blue zombies and one red observer. One zombie will be a bit closer to the observer, and it moves left and right. The observer should have and keep an interest in the blue zombie over time.
+\end{itemize}
+
+\textbf{Behavior} The ability to determine another agent's movement and categorize their actions. \\
+
+\textbf{Implementation} Suppose we are tracking another agent for some duration. Over some interval of time-steps we will store information about the position of the agent with respect to our $frcp$ model. If the other agent is moving to a position that is used to be more comforting to us, then we consider that they are becoming more aggressive. This will account for an agent attempting to approach us, or an enemy agent attempting to approach an agent on our team. In general, we will analyze the frcp gradient over a period of time to determine the differences. \\
+
+\textbf{Tests}\\ 
+\begin{itemize}
+\item We have one red zombie and one blue observer. The zombie moves towards the observer from across the field, and the observer senses an increase in the hostility of the zombie. In the opposite direction, the observer should sense a decrease in hostility.
+\item We have two red zombies and one blue observer. The zombies move towards each other without getting closer to the observer. The observer should take this as an aggressive action. There should be less risk going to both red zombies independently than two zombies together.
+\item We have one blue zombie and one blue observer. The blue zombie moves from the back (a less hostile area) towards the observer. The observer views this as an aggressive action. When the zombie moves away from the observer to a more comforting area this is viewed as a passive action. When the zombie moves back from a hostile area near the observer, this is viewed as a passive action.
+\end{itemize}
+\end{section}
+\end{document}
