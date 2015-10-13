@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.cmu.cs.graphics</groupId>
+	<artifactId>emotion-crowd-simulation</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>emotion-crowd-simulation</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<!-- Note : we use a local files to host the tungsten-fsm project and the 
+		Quadtree projects (which don't appear available on any maven server) -->
+	<repositories>
+		<repository>
+			<id>localRepo</id>
+			<url>file://${basedir}/libs</url>
+		</repository>
+	</repositories>
+
+
+	<!-- We use an script to download the tungsten-fsm and Quadtree jars into 
+		${basedir}/libs/ -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>generate-resources</phase>
+							<configuration>
+								<tasks>
+									<exec executable="build.sh">
+									</exec>
+								</tasks>
+							</configuration>
+							<goals>
+								<goal>install</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ejml</groupId>
+			<artifactId>core</artifactId>
+			<version>0.27</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ejml</groupId>
+			<artifactId>simple</artifactId>
+			<version>0.27</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.vecmath</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.11.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.concord.external</groupId>
+			<artifactId>tungsten</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/tungsten-fsm-1.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>edu.cmu.cs.zkieda</groupId>
+			<artifactId>Quadtree</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/Quadtree-1.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>edu.cmu.cs.zkieda</groupId>
+			<artifactId>ModLang</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/ModLang-1.0.jar</systemPath>
+		</dependency>
+	</dependencies>
+</project>
