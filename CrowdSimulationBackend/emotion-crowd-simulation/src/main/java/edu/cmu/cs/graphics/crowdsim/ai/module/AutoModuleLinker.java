@@ -57,6 +57,7 @@ public class AutoModuleLinker {
         }
         addToMap(module);
     }
+    
     private SubModule parseAutoWired(Iterator<Path> it, SubModule root){
         SubModule cur = root;
         //parse the autowired value.
@@ -106,6 +107,7 @@ public class AutoModuleLinker {
         }
         return cur;
     }
+    
     private void inject(Field f, SubModule obj, SubModule val){
         f.setAccessible(true);
         try {
@@ -129,6 +131,7 @@ public class AutoModuleLinker {
 
         return result;
     }
+    
     public void link(SubModule module){
         if(module instanceof MultiModule){
             for(SubModule sm : (List<SubModule>)((MultiModule)module).getChildren()){

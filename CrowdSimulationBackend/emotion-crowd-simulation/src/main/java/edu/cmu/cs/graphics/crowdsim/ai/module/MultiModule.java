@@ -1,23 +1,27 @@
 package edu.cmu.cs.graphics.crowdsim.ai.module;
 
 import com.google.common.collect.Lists;
-import edu.cmu.cs.graphics.crowdsim.ai.core.Player;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
+ * Represents a MultiModule that we use for the crowd simulation project.
+ * 
+ * Note that we specify much of the functionality in terms of the linking 
+ * unit a module is in. Typically, the linking unit is restricted to all
+ * of the modules that are loaded in a single ModLang program. However,
+ * in this situation, we allow manual module tree construction. All modules
+ * in the same linking unit are modules that are initialized in the same tree.
+ * 
  * @author zkieda
  * @param <Parent>
  */
 public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> {
     private List<SubModule> modules = new ArrayList<>();
-//    private boolean playerInitialized = false;
-    
     private boolean moduleInitialized = false;
-
+    
     @Override
     public void init(Parent parent) {
         super.init(parent);
@@ -33,34 +37,15 @@ public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> 
     
     public void addModule(SubModule module){
         modules.add(module);
+        
         module.init(this);
+        
+        if(isInitialized()) {
+        	//process root of child if it's not in 
+        	//the same compilation unit as this one. 
+        	getProcessor().process(module);
+        }
     }
-
-    //lazily initialize all modules added in case parent module is added 
-    //afterwards
-    
-    //addModule : 
-    //  1. add to list of children
-    //  2. init player if necessary
-    //  3. set the parent of the module
-    //  in subModule : 
-    //      1. test if parent has injector
-    //      2. yes : use parent injector to build map addition and 
-    //         inject autowired
-    //      3. no : create new injector and initialize this as root.
-    //      4. set this injector as getInjector()
-    //  
-    
-//    @Override
-//    public final void initPlayer(Player player) {
-//        if(!playerInitialized){
-//            super.initPlayer(player);
-//            modules.forEach(m -> m.initPlayer(player));
-//            player.getInjector().buildMap(this);
-//            player.getInjector().link(this);
-//            playerInitialized = true;
-//        }
-//    }
     
     @Override
     public void onFrameUpdate() {
