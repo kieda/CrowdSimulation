@@ -1,10 +1,12 @@
-package edu.cmu.cs.graphics.crowdsim.ai.module;
+package edu.cmu.cs.graphics.crowdsim.module;
 
 import edu.cmu.cs.zkieda.modlang.linker.LinkingException;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -119,6 +121,8 @@ public class AutoModuleLinker {
         }
     }
     
+    
+    
     private List<Field> getInheritedPrivateFields(Class<?> type) {
         List<Field> result = new ArrayList<>();
 
@@ -132,9 +136,21 @@ public class AutoModuleLinker {
         return result;
     }
     
+    
+    private void linkCollection(Collection c, Class<?> clazz, SubModule root){
+    	if(clazz.isInstance(root)){
+    		c.add(root);
+    	}
+    	if(root instanceof MultiModule){
+            for(SubModule sm : ((MultiModule)root).getChildren()){
+                linkCollection(c, clazz, sm);
+            }
+        }
+    }
+    
     public void link(SubModule module){
         if(module instanceof MultiModule){
-            for(SubModule sm : (List<SubModule>)((MultiModule)module).getChildren()){
+            for(SubModule sm : ((MultiModule)module).getChildren()){
                 link(sm);
             }
         }
@@ -142,10 +158,24 @@ public class AutoModuleLinker {
         for(Field f : fs){
             AutoWired aw = f.getAnnotation(AutoWired.class);
             if(aw != null){
-                if(!noThrow && !SubModule.class.isAssignableFrom(f.getType())){
-                    throw new AutoWiredException("Specified SubModule is not a submodule");
-                }
-                if(aw.value().isEmpty()){
+            	if(Collection.class.equals(f.getType())){
+            		Class<?> inject = (Class<?>)((ParameterizedType)f.getGenericType()).getActualTypeArguments()[0];
+        			f.setAccessible(true);
+        	        try {
+        	        	Collection<?> val = (Collection<?>)f.get(module);
+        	            
+        	        	if(val == null){
+        	            	val = new ArrayList();
+        	            	f.set(module, val);
+        	            }
+        	            
+        	        	linkCollection(val, inject, root);
+        	        } catch (IllegalArgumentException | IllegalAccessException ex) {
+        	            if(!noThrow){
+        	                throw new AutoWiredException("Could not inject ...");
+        	            }
+            		}
+            	} else if(aw.value().isEmpty()){
                     SubModule sm = map.get(f.getType());
                     if(sm != null){
                         inject(f, module, sm);

@@ -1,7 +1,7 @@
 package edu.cmu.cs.graphics.crowdsim.ai.perception;
 
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
 import edu.cmu.cs.graphics.crowdsim.ai.internal.InternalModule;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
 
 /**
  * @author zkieda

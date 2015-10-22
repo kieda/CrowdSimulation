@@ -1,7 +1,7 @@
 package edu.cmu.cs.graphics.crowdsim.ai.perception;
 
 import edu.cmu.cs.graphics.crowdsim.ai.core.GameObject;
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
 
 /**
  *  maybe : 
@@ -14,7 +14,7 @@ import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
  *  we'll avoid collision problems naturally.
  * @author zkieda
  */
-public class FieldOfVisionModule extends SubModule<PerceptionModule>{
+public class FieldOfVisionModule extends SubModule{
     //todo calculate based on perception CCCIP
     public double getFieldOfVision(){
         return Math.toRadians(90);

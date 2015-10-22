@@ -1,21 +1,23 @@
 package edu.cmu.cs.graphics.crowdsim.ai.internal;
 
-//todo make this a module 
-
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
 import java.util.Arrays;
 import javafx.scene.paint.Color;
 import javax.vecmath.Color3f;
 import org.ejml.ops.NormOps;
 import org.ejml.simple.SimpleMatrix;
 
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
+
 // so we get the appropriate information
-public class MoodColorModule extends SubModule<InternalModule>{
+public class MoodColorModule extends SubModule{
     //represents our vector of colors
     // dimensions = {number of emptions, colors}
     // = 8x3 mat
     public final SimpleMatrix moodMat;
     private ProbabilisticSubspace curColorSpace;
+    private @AutoWired InternalModule internalModule;
+    private @AutoWired EmotionLinearSystem internalState;
     
     private static double[][] color(String... colorhex){
         double[][] res = new double[colorhex.length][3];
@@ -45,7 +47,7 @@ public class MoodColorModule extends SubModule<InternalModule>{
         //value
     }
     private ProbabilisticSubspace getExpectedPlayerColor(){
-        return getParent().getInternalState().getMoodSpace().transform(moodMat);
+        return internalState.getMoodSpace().transform(moodMat);
     }
     
     
@@ -60,7 +62,7 @@ public class MoodColorModule extends SubModule<InternalModule>{
     public void init() {
         //set the initial mood color
         curColorSpace = getExpectedPlayerColor();
-        getParent().setMoodColor(toColor(curColorSpace.getWeights()));
+        internalModule.setMoodColor(toColor(curColorSpace.getWeights()));
     }
     /**
      * TODO 
@@ -92,7 +94,7 @@ public class MoodColorModule extends SubModule<InternalModule>{
         ProbabilisticSubspace targetColorSpace = getExpectedPlayerColor();
         double diff = NormOps.fastNormF(curColorSpace.probabilityDiff(targetColorSpace.getWeights()).getMatrix());
         if(diff >= thresholdChange()){
-            getParent().setMoodColor(toColor(targetColorSpace.getRandomValue()));
+            internalModule.setMoodColor(toColor(targetColorSpace.getRandomValue()));
         }
     }
 

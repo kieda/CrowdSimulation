@@ -1,4 +1,4 @@
-package edu.cmu.cs.graphics.crowdsim.ai.module;
+package edu.cmu.cs.graphics.crowdsim.module;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -14,16 +14,32 @@ import java.util.stream.Stream;
  * of the modules that are loaded in a single ModLang program. However,
  * in this situation, we allow manual module tree construction. All modules
  * in the same linking unit are modules that are initialized in the same tree.
+ *
+ * The process that modules are initialized:
+ * 
+ * (handled by ConstructModule)
+ * 1. Building the module tree
+ * 2. Linking the modules together
+ * 3. Finding all listeners in the local tree
+ * 4. Processing all listeners in the tree
+ * 
+ * (handled by calling init(null) at root)
+ * 5. Initializing all modules in the tree
+ * 
+ * 6. Running modules in the tree.
+ * 
+ * All tree traversal are a depth-first search that process the root before the
+ * children of the tree. We traverse the children from left to right (first to
+ * last)
  * 
  * @author zkieda
- * @param <Parent>
  */
-public class MultiModule <Parent extends MultiModule> extends SubModule<Parent> {
+public class MultiModule extends SubModule {
     private List<SubModule> modules = new ArrayList<>();
     private boolean moduleInitialized = false;
     
     @Override
-    public void init(Parent parent) {
+    public void init(MultiModule parent) {
         super.init(parent);
         if(getParent() == null || getParent().isInitialized()){
             moduleInitialized = true;

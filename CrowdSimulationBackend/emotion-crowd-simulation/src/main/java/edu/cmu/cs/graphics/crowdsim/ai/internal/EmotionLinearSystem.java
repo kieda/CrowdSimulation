@@ -1,10 +1,14 @@
 package edu.cmu.cs.graphics.crowdsim.ai.internal;
 
 import com.google.common.math.DoubleMath;
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
+
 import static edu.cmu.cs.graphics.crowdsim.util.MatrixUtil.fill;
 import static edu.cmu.cs.graphics.crowdsim.ai.internal.InternalModule.NUM_MOODS;
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
+
+import edu.cmu.cs.graphics.crowdsim.ai.perception.PerceptionModule;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
 import edu.cmu.cs.graphics.crowdsim.util.LinearProgram;
 import edu.cmu.cs.graphics.crowdsim.util.MatrixUtil;
 import org.jgrapht.Graph;
@@ -22,7 +26,7 @@ import java.util.regex.Pattern;
  * 
  * @author zkieda
  */
-public class EmotionLinearSystem extends MultiModule<InternalModule> {
+public class EmotionLinearSystem extends MultiModule {
     
     /* TODO
      * main idea : 
@@ -89,8 +93,11 @@ public class EmotionLinearSystem extends MultiModule<InternalModule> {
     //represents our linear program
     private LinearProgram emotionProgram;
     
+    private @AutoWired InitialEmotionGraphConstructor moodGraphConstructor;
+    private @AutoWired PerceptionModule perceptionModule;
+    
     private void initMoodGraph(){
-        moodGraph = getModuleByClass(InitialEmotionGraphConstructor.class).get().buildGraph();
+        moodGraph = moodGraphConstructor.buildGraph();
         Set<MoodVertex> vertices = moodGraph.vertexSet();
         this.vertices = new MoodVertex[vertices.size()];
         vertices.forEach(v -> this.vertices[v.getId()] = v);
@@ -147,7 +154,7 @@ public class EmotionLinearSystem extends MultiModule<InternalModule> {
     }
     
     private SimpleMatrix getDelta(){ 
-        return getParent().getPerception().getDelta().getMatrix();
+        return perceptionModule.getDelta().getMatrix();
     }
     
     private SimpleMatrix getEmotion(){
@@ -177,14 +184,5 @@ public class EmotionLinearSystem extends MultiModule<InternalModule> {
             newEmotion = getEmotion();
         }
         //todo set new emotional state.
-    }
-}
-class Test{
-    public static void main(String[] args) {
-        Pattern p = Pattern.compile("(?:[^/]*/)*?([^/.]*)(?:\\..*)");
-        Matcher m = p.matcher("hello/world/asdf.co.m");
-        System.out.println(m.matches());
-        System.out.println(m.group());
-        System.out.println(m.group(1));
     }
 }

@@ -1,8 +1,9 @@
 package edu.cmu.cs.graphics.crowdsim.ai.internal;
 
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoWired;
 import edu.cmu.cs.graphics.crowdsim.ai.perception.PerceptionModule;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
+
 import java.util.function.Consumer;
 import javax.vecmath.Color3f;
 
@@ -13,15 +14,8 @@ public class InternalModule extends MultiModule{
     private @AutoWired EmotionLinearSystem internalState;
     private @AutoWired PerceptionModule perception;
     private @AutoWired MoodColorModule moodColor;
-    private Consumer<Color3f> changeColorFn;
     
-    public EmotionLinearSystem getInternalState() {
-        return internalState;
-    }
-
-    public PerceptionModule getPerception() {
-        return perception;
-    }
+    private Consumer<Color3f> changeColorFn;
     
     public void setMoodColor(Color3f color){
         changeColorFn.accept(color);

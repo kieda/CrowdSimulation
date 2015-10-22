@@ -1,17 +1,18 @@
 package edu.cmu.cs.graphics.crowdsim.ai.perception;
 
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
 import org.ejml.simple.SimpleMatrix;
+
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
 
 /**
  * @author zkieda
  */
-public class PerceptionEmotionChange extends MultiModule<PerceptionModule> {
+public class PerceptionEmotionChange extends MultiModule {
     public SimpleMatrix getMatrix(){return null;}
     public SimpleMatrix getUncertainty(){return null;}
     
-    public static abstract class DeltaEmotion extends SubModule<PerceptionEmotionChange>{
+    public static abstract class DeltaEmotion extends SubModule{
         public abstract SimpleMatrix getUncertainty();
         public abstract SimpleMatrix getDelta();
         public abstract SimpleMatrix getInfluence();

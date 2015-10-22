@@ -17,6 +17,7 @@ public interface InitialStateGenerator {
     //field. 
     
     //gameSetting is used to set the game's properties
-    public void initialize(Function<Function<Group, Objective>, Function<String, Group>> handle,
-            Properties gameSettings);
+    public void init(Function<Function<Group, Objective>, Function<String, Group>> handle);
+    
+    public Bounds getGameBounds();
 }

@@ -1,9 +1,10 @@
 package edu.cmu.cs.graphics.crowdsim.ai.internal;
 
 import edu.cmu.cs.graphics.crowdsim.ai.core.Player;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoWired;
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
 import edu.cmu.cs.graphics.crowdsim.ai.perception.FRCPLevel;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
+
 import java.util.Arrays;
 import org.ejml.simple.SimpleMatrix;
 

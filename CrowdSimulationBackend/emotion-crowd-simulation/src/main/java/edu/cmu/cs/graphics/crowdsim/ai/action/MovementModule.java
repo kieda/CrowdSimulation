@@ -1,10 +1,10 @@
 package edu.cmu.cs.graphics.crowdsim.ai.action;
 
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
 
 /**
  * @author zkieda
  */
-public class MovementModule extends SubModule<ActionModule>{
+public class MovementModule extends SubModule{
     
 }

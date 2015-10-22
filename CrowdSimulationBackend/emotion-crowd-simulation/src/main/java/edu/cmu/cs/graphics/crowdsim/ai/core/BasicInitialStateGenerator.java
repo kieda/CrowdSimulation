@@ -1,6 +1,8 @@
 package edu.cmu.cs.graphics.crowdsim.ai.core;
 
 import edu.cmu.cs.graphics.crowdsim.ai.internal.InternalTraits;
+import edu.cmu.cs.graphics.crowdsim.drivers.ArgsListenerModule.ArgsModifier;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
 import edu.cmu.cs.graphics.crowdsim.util.OpenSimplexNoise;
 import edu.cmu.cs.graphics.crowdsim.util.PointToRealFn;
 import edu.cmu.cs.graphics.crowdsim.util.Properties;
@@ -9,6 +11,11 @@ import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
@@ -28,22 +35,22 @@ import javafx.geometry.Dimension2D;
  * finally, we use the perception API to determine individuals direction
  * @author zkieda
  */
-public class BasicInitialStateGenerator implements InitialStateGenerator{
-    private final int redTeamPlayerCount;
-    private final int blueTeamPlayerCount;
+public class BasicInitialStateGenerator extends MultiModule implements InitialStateGenerator, ArgsModifier{
+    private int redTeamPlayerCount;
+    private int blueTeamPlayerCount;
     private final Random gen = new Random();
     private final double boardWidth =  24.5;
     private final Bounds boardDimensions = new BoundingBox(-boardWidth, -boardWidth, 2*boardWidth, 2*boardWidth);
     private final PointToRealFn boardGenerator = new OpenSimplexNoise();
 
     
-    public BasicInitialStateGenerator(int expectedTeamPlayerCount){
-        this(expectedTeamPlayerCount, 0.5);
-    }
-    public BasicInitialStateGenerator(int expectedTeamPlayerCount, double precision){
-        redTeamPlayerCount = (int) (gaussianInt(expectedTeamPlayerCount, precision));
-        blueTeamPlayerCount = (int) (gaussianInt(expectedTeamPlayerCount, precision));
-    }
+//    public BasicInitialStateGenerator(int expectedTeamPlayerCount){
+//        this(expectedTeamPlayerCount, 0.5);
+//    }
+//    public BasicInitialStateGenerator(int expectedTeamPlayerCount, double precision){
+//        redTeamPlayerCount = (int) (gaussianInt(expectedTeamPlayerCount, precision));
+//        blueTeamPlayerCount = (int) (gaussianInt(expectedTeamPlayerCount, precision));
+//    }
     
     private int gaussianInt(int other, double percision){
         return (int) ((1.0 - percision) * other * (gen.nextGaussian() + 1.0) 
@@ -60,7 +67,7 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
     }
     
     @Override
-    public void initialize(Function<Function<Group, Objective>, Function<String, Group>> handle, 
+    public void init(Function<Function<Group, Objective>, Function<String, Group>> handle, 
             Properties gameSettings) {
         final Function<String, Group> ctfFactory = handle.apply(CaptureTheFlag::new);
         final Group red = ctfFactory.apply("red");
@@ -72,4 +79,23 @@ public class BasicInitialStateGenerator implements InitialStateGenerator{
         gameSettings.put(Game.PROPERTY_GAME_BOUNDS, boardDimensions);
         
     }
+    
+    private static final String PLAYERS = "players";
+    private static final String PRECISION = "precision";
+    
+	@Override
+	public void modifyOptions(Options o) {
+		o.addOption(new Option(PRECISION, false, 
+              "the precision of the number of players on each team"));
+		o.addOption(new Option(PLAYERS, false, 
+              "the expected number of players on each team"));
+	}
+	@Override
+	public void result(CommandLine cl) {
+		int numPlayers = cl.hasOption(PLAYERS) ? Integer.parseInt(cl.getOptionValue(PLAYERS)) : 10;
+		double precision = cl.hasOption(PRECISION) ? Double.parseDouble(cl.getOptionValue(PRECISION)) : 0.5;
+		
+		redTeamPlayerCount = (int) (gaussianInt(numPlayers, precision));
+        blueTeamPlayerCount = (int) (gaussianInt(numPlayers, precision));
+	}
 }

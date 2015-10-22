@@ -4,15 +4,16 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Range;
 import edu.cmu.cs.graphics.crowdsim.ai.core.Player;
-import edu.cmu.cs.graphics.crowdsim.ai.module.SubModule;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.SubModule;
+
 import org.jgrapht.Graph;
 import static edu.cmu.cs.graphics.crowdsim.ai.internal.EmotionLinearSystem.*;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoWired;
 
 /**
  * @author zkieda
  */
-public abstract class InitialEmotionGraphConstructor extends SubModule<EmotionLinearSystem>{
+public abstract class InitialEmotionGraphConstructor extends SubModule{
     public abstract Graph<MoodVertex, MoodEdge> 
         buildGraph();
 }

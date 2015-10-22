@@ -1,16 +1,17 @@
 package edu.cmu.cs.graphics.crowdsim.ai.core;
 
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
 import com.continuent.tungsten.fsm.core.Entity;
 import edu.cmu.cs.graphics.crowdsim.ai.action.ActionModule;
 import edu.cmu.cs.graphics.crowdsim.ai.internal.InternalModule;
 import edu.cmu.cs.graphics.crowdsim.ai.internal.InternalTraits;
 import edu.cmu.cs.graphics.crowdsim.ai.internal.TokenModule;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoModuleLinker;
-import edu.cmu.cs.graphics.crowdsim.ai.module.ConstructModule;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoWired;
 import edu.cmu.cs.graphics.crowdsim.ai.perception.FieldOfVisionModule;
 import edu.cmu.cs.graphics.crowdsim.ai.perception.PerceptionModule;
+import edu.cmu.cs.graphics.crowdsim.module.AutoModuleLinker;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.ConstructModule;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
+
 import static edu.cmu.cs.graphics.crowdsim.serialize.SerializeGame.color;
 import static edu.cmu.cs.graphics.crowdsim.serialize.SerializeGame.vec2;
 import edu.cmu.cs.zkieda.quadtree.QuadTree;
@@ -61,7 +62,6 @@ public class Player extends MultiModule implements Spectator, Entity{
                 if(newVal) g.removePlayer(Player.this);
             });
         init((MultiModule)null);
-//        initPlayer((Player)this);
         
         this.objective = g.getObjective().makePlayerObjective(this);
         this.playerActions = new PlayerActions(this.playerState);

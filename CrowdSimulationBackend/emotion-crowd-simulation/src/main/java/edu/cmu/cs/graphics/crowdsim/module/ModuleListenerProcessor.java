@@ -1,4 +1,4 @@
-package edu.cmu.cs.graphics.crowdsim.ai.module;
+package edu.cmu.cs.graphics.crowdsim.module;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +49,7 @@ public class ModuleListenerProcessor {
 	 * Processes this module through all listeners as if it were just 
 	 * added.
 	 */
-	public <T extends MultiModule<?>> void process(SubModule<T> module){
+	public void process(SubModule module){
 		for(Consumer listener : getListeners(module.getClass())){
 			try{
 				listener.accept(module);

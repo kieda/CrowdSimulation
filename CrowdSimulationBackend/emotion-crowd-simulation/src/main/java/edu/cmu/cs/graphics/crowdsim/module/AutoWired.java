@@ -1,4 +1,4 @@
-package edu.cmu.cs.graphics.crowdsim.ai.module;
+package edu.cmu.cs.graphics.crowdsim.module;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

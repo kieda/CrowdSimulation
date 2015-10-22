@@ -1,4 +1,4 @@
-package edu.cmu.cs.graphics.crowdsim.ai.module;
+package edu.cmu.cs.graphics.crowdsim.module;
 
 import edu.cmu.cs.zkieda.modlang.linker.LinkingException;
 

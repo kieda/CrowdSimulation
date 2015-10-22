@@ -1,12 +1,10 @@
 package edu.cmu.cs.graphics.crowdsim.ai.action;
 
-//represents the module that handles all actions
-
-import edu.cmu.cs.graphics.crowdsim.ai.module.MultiModule;
 import edu.cmu.cs.graphics.crowdsim.ai.core.PlayerActions;
 import edu.cmu.cs.graphics.crowdsim.ai.internal.InternalModule;
-import edu.cmu.cs.graphics.crowdsim.ai.module.AutoWired;
 import edu.cmu.cs.graphics.crowdsim.ai.perception.PerceptionModule;
+import edu.cmu.cs.graphics.crowdsim.module.AutoWired;
+import edu.cmu.cs.graphics.crowdsim.module.MultiModule;
 
 
 /**
