@@ -67,16 +67,13 @@ public class BasicInitialStateGenerator extends MultiModule implements InitialSt
     }
     
     @Override
-    public void init(Function<Function<Group, Objective>, Function<String, Group>> handle, 
-            Properties gameSettings) {
+    public void init(Function<Function<Group, Objective>, Function<String, Group>> handle) {
         final Function<String, Group> ctfFactory = handle.apply(CaptureTheFlag::new);
         final Group red = ctfFactory.apply("red");
         final Group blue = ctfFactory.apply("blue");
         
         //todo - 1. add in players
         // 2. add in flags
-        
-        gameSettings.put(Game.PROPERTY_GAME_BOUNDS, boardDimensions);
         
     }
     
@@ -97,5 +94,10 @@ public class BasicInitialStateGenerator extends MultiModule implements InitialSt
 		
 		redTeamPlayerCount = (int) (gaussianInt(numPlayers, precision));
         blueTeamPlayerCount = (int) (gaussianInt(numPlayers, precision));
+	}
+
+	@Override
+	public Bounds getGameBounds() {
+		return boardDimensions;
 	}
 }
